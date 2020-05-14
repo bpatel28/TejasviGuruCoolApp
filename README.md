@@ -1,1 +1,1 @@
-# TejasviEducareApp
+# TejasviGuruCoolApp
