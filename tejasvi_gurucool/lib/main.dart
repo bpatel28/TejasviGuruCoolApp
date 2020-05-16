@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
+import 'package:tejasvi_gurucool/screens/register_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,13 +15,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
+        primaryColor: Colors.blueAccent,
+        accentColor: Colors.redAccent,
         backgroundColor: Colors.white,
+        buttonColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: '/login',
       routes: {
         '/login' : (context) => LoginScreen(),
+        '/register' : (context) => RegisterScreen(),
       },
     );
   }

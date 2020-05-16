@@ -17,7 +17,10 @@ class LoginScreen extends StatelessWidget {
             Icons.people,
             size: 200,
           ),
-          LoginForm()
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: LoginForm(),
+          )
         ],
       ),
     );
@@ -30,57 +33,105 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  TextStyle textStyle = TextStyle(fontFamily: 'Montserrat', fontSize: 18.0);
+  final _formKey = GlobalKey<FormState>();
 
-  Widget getTextFiled(hintText, {bool obscureText = false}) {
-    return TextField(
-      obscureText: obscureText,
-      style: textStyle,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: hintText,
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
+  bool _passwordVisible = false;
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
+  }
+
+  String _validateUsername(String username) {
+    if (username.isEmpty) {
+      return "Username is empty";
+    }
+    return null;
+  }
+
+  String _validatePassword(String password) {
+    if (password.isEmpty) {
+      return "Password is empty";
+    }
+    return null;
+  }
+
+  void showSnackBar(BuildContext context, message) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
+  }
+
+  void _onLoginButtonPressed(context) {
+    if (!_formKey.currentState.validate()) return;
+
+    showSnackBar(context, "Login Successful");
+    Navigator.of(context).pushNamed("/");
+  }
+
+  void _onSignUpButtonPressed(context) {
+    Navigator.of(context).pushNamed("/register");
   }
 
   @override
   build(BuildContext context) {
-    final loginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme.of(context).primaryColor,
-      child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          onPressed: () {
-            Navigator.pushNamed(context, '/');
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              "Login",
-              textAlign: TextAlign.center,
-              style: textStyle.copyWith(
-                  color: Colors.white, fontWeight: FontWeight.bold),
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            controller: _usernameController,
+            validator: _validateUsername,
+            decoration: InputDecoration(
+              labelText: "Enter Username",
+              border: OutlineInputBorder(),
             ),
-          )),
-    );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: getTextFiled("Email"),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: getTextFiled("Password", obscureText: true),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: loginButton,
-        ),
-      ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            controller: _passwordController,
+            validator: _validatePassword,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                icon: Icon(
+                    _passwordVisible ? Icons.visibility : Icons.visibility_off),
+                onPressed: _togglePasswordVisibility,
+              ),
+              labelText: "Enter Password",
+              border: OutlineInputBorder(),
+            ),
+            obscureText: !_passwordVisible,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          RaisedButton(
+            color: Theme.of(context).primaryColor,
+            splashColor: Theme.of(context).accentColor,
+            child: Text("LOGIN"),
+            onPressed: () => _onLoginButtonPressed(context),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Don't have an account.", style: TextStyle(fontSize: 15),),
+              InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text("Register Now.", style: TextStyle(fontSize: 18),),
+                ),
+                splashColor: Theme.of(context).accentColor,
+                onTap: () => _onSignUpButtonPressed(context),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
