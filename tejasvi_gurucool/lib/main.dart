@@ -17,8 +17,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blueAccent,
         accentColor: Colors.redAccent,
-        backgroundColor: Colors.white,
-        buttonColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: '/login',

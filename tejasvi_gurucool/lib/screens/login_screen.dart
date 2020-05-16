@@ -112,6 +112,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
+            textColor: Colors.white,
             splashColor: Theme.of(context).accentColor,
             child: Text("LOGIN"),
             onPressed: () => _onLoginButtonPressed(context),

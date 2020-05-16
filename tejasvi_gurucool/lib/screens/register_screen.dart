@@ -183,6 +183,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
+            textColor: Colors.white,
             splashColor: Theme.of(context).accentColor,
             child: Text("SIGN UP"),
             onPressed: () => _onSignUpButtonPressed(context),
