@@ -101,7 +101,7 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void _onLoginButtonPressed(context) {
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 
   @override
