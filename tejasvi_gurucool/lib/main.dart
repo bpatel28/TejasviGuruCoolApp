@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       middleName: "Jayendrabhai",
       birthDate: new DateTime(1995, 5, 28),
       phoneNo: 5877001874,
+      username: "b.patel28",
       email: "b.patel9528@gmail.com",
       password: "1234567",
       createdOn: DateTime.now().subtract(new Duration(days: 5)),

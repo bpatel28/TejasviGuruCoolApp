@@ -17,8 +17,8 @@ class User {
   int _phoneNo;
   int get phoneNo => _phoneNo;
 
-  int _username;
-  int get userName => _username;
+  String _username;
+  String get username => _username;
 
   String _email;
   String get email => _email;
@@ -77,6 +77,7 @@ class User {
       String middleName,
       DateTime birthDate,
       int phoneNo,
+      String username,
       String email,
       String password,
       DateTime createdOn,
@@ -87,6 +88,7 @@ class User {
         _middleName = middleName,
         _birthDate = birthDate,
         _phoneNo = phoneNo,
+        _username = username,
         _email = email,
         _password = password,
         _createdOn = createdOn,
