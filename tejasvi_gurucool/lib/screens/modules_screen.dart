@@ -4,6 +4,7 @@ import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
+import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
@@ -14,12 +15,20 @@ class ModulesScreenArgs {
   ModulesScreenArgs(this.user, this.subject);
 }
 
+void onTapModuleCard(BuildContext context, StudyModule module) {
+  if (module != null) {
+    final ModulesScreenArgs args = ModalRoute.of(context).settings.arguments;
+    Navigator.pushNamed(context, Routes.MODULE_ITEMS,
+        arguments: ModuleItemsScreenArgs(args.user, module));
+  }
+}
+
 class ModulesScreen extends StatelessWidget {
   Widget _getStudyModuleCard(BuildContext context, StudyModule module) {
     return Card(
       child: InkWell(
         splashColor: Theme.of(context).accentColor,
-        onTap: () {},
+        onTap: () => onTapModuleCard(context, module),
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(

@@ -22,7 +22,7 @@ class AppDrawer extends StatelessWidget {
       headerWidgets.add(Text(
         _user.batches[i].name,
         style: TextStyle(
-          color: Colors.black,
+          color: Colors.white
         ),
       ));
     }
@@ -39,6 +39,7 @@ class AppDrawer extends StatelessWidget {
               padding: EdgeInsets.all(12.0),
               color: Colors.red,
               textColor: Colors.white,
+              fontSize: 15.0,
             ),
             Padding(
               padding: EdgeInsets.only(left: 10.0),

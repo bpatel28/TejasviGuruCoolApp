@@ -1,4 +1,5 @@
 import 'package:tejasvi_gurucool/models/batch_model.dart';
+import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
@@ -37,19 +38,25 @@ class Mock {
       batches: batches,
       );
 
+  static List<ModuleFile> files = <ModuleFile>[
+    new ModuleFile(id: 1, name: "item1", path: "https://cdn.pixabay.com/photo/2014/08/26/19/20/document-428331_960_720.jpg", type: FileType.IMAGE_FILE),
+    new ModuleFile(id: 3, name: "item3", path: "https://www.youtube.com/watch?v=LKWwDWrWgk4", type: FileType.VIDEO_FILE),
+    new ModuleFile(id: 4, name: "item4", path: "https://appletree.or.kr/quick_reference_cards/Unix-Linux/Linux%20Command%20Line%20Cheat%20Sheet.pdf", type: FileType.PDF_FILE)
+  ];
+
   static List<ModuleItem> mathModule1Items1 = <ModuleItem>[
     new ModuleItem(
         id: 1,
         title: "Math Module 1 Item 1",
-        description: "Math Module 1 Item 1 Description"),
+        description: "Math Module 1 Item 1 Description", file: files[0]),
     new ModuleItem(
         id: 2,
         title: "Math Module 1 Item 2",
-        description: "Math Module 1 Item 2 Description"),
+        description: "Math Module 1 Item 2 Description", file: files[1]),
     new ModuleItem(
         id: 3,
         title: "Math Module 1 Item 3",
-        description: "Math Module 1 Item 3 Description"),
+        description: "Math Module 1 Item 3 Description", file: files[2]),
     new ModuleItem(
         id: 4,
         title: "Math Module 1 Item 4",

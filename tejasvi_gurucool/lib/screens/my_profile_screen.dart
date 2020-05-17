@@ -5,11 +5,11 @@ import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
-class MyProfile extends StatelessWidget {
+class MyProfileScreen extends StatelessWidget {
   final User _user;
   final Color _cardBackgroundColor = const Color(0xFFfbf7f9);
 
-  MyProfile(this._user);
+  MyProfileScreen(this._user);
 
   Widget createUserInfoText(String label, String text) {
     return Card(

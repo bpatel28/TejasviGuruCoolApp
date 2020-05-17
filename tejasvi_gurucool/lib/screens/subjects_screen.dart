@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
-import 'package:tejasvi_gurucool/mock_data.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/screens/modules_screen.dart';
@@ -22,7 +21,8 @@ class SubjectsScreen extends StatelessWidget {
 
   void onSubjectCardTap(BuildContext context, Subject subject) {
     if (subject != null) {
-      Navigator.pushNamed(context, Routes.MODULES, arguments: ModulesScreenArgs(_user, subject));
+      Navigator.pushNamed(context, Routes.MODULES,
+          arguments: ModulesScreenArgs(_user, subject));
     }
   }
 

@@ -4,10 +4,10 @@ import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 
-class AboutUs extends StatelessWidget {
+class AboutUsScreen extends StatelessWidget {
   final User _user;
 
-  AboutUs(this._user);
+  AboutUsScreen(this._user);
 
   @override
   Widget build(BuildContext context) {
