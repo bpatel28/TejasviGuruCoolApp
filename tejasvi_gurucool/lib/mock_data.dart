@@ -19,7 +19,8 @@ class Mock {
       password: "1234567",
       createdOn: DateTime.now().subtract(new Duration(days: 5)),
       updatedOn: DateTime.now(),
-      batch: batch);
+      batches: batches
+      );
 
   static User user2 = new User(
       id: 2,
@@ -33,7 +34,8 @@ class Mock {
       password: "789123456",
       createdOn: DateTime.now().subtract(new Duration(days: 5)),
       updatedOn: DateTime.now(),
-      batch: batch);
+      batches: batches,
+      );
 
   static List<ModuleItem> mathModule1Items1 = <ModuleItem>[
     new ModuleItem(
@@ -158,6 +160,9 @@ class Mock {
     //     id: 4, text: "Test 4", sender: user2, timestamp: new DateTime.now())
   ];
 
-  static Batch batch = new Batch(
-      id: 1, name: "10-A", announcements: announcements, subjects: subjects);
+  static List<Batch> batches = <Batch>[
+    new Batch(id: 1, name: "10-A", announcements: announcements, subjects: subjects),
+    new Batch(id: 1, name: "10-B", announcements: announcements, subjects: subjects),
+    new Batch(id: 1, name: "10-C", announcements: announcements, subjects: subjects)
+  ];
 }

@@ -9,27 +9,29 @@ class AppDrawer extends StatelessWidget {
   AppDrawer(this._user, this._selectedRoute);
 
   Widget _createHeader(BuildContext context) {
+    List<Widget> headerWidgets = <Widget>[];
+    headerWidgets.add(
+      Text(
+        _user.getName(),
+        style: TextStyle(
+            color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w500),
+      ),
+    );
+    for (int i = 0; i < _user.batches.length; ++i) {
+      headerWidgets.add(Text(
+        _user.batches[i].name,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ));
+    }
     return DrawerHeader(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.only(top: 15.0, left: 10.0),
         decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              _user.getName(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500),
-            ),
-            Text(
-              _user.batch.name,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            )
-          ],
+          children: headerWidgets,
         ));
   }
 
@@ -54,46 +56,45 @@ class AppDrawer extends StatelessWidget {
   }
 
   void _changeRoute(BuildContext context, String routeName) {
-    if (routeName == Routes.SUBJECTS) { 
-      // subject route is home route. 
+    if (routeName == Routes.SUBJECTS) {
+      // subject route is home route.
       // pop until home route comes back.
       Navigator.popUntil(context, (route) => route.isFirst);
-    }
-    else if (routeName != _selectedRoute) {
+    } else if (routeName != _selectedRoute) {
       // pop until home route comes back and push new route.
-      Navigator.pushNamedAndRemoveUntil(context, routeName, (route) => route.isFirst);
+      Navigator.pushNamedAndRemoveUntil(
+          context, routeName, (route) => route.isFirst);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child : ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          _createHeader(context),
-          _createDrawerItem(context,
-                icon: Icons.subject,
-                text: "Subjects",
-                onTap: () => _changeRoute(context, Routes.SUBJECTS),
-                selected: _selectedRoute == Routes.SUBJECTS),
-            _createDrawerItem(context,
-                icon: Icons.announcement,
-                text: "Announcements",
-                onTap: () => _changeRoute(context, Routes.ANNOUNCEMENTS),
-                selected: _selectedRoute == Routes.ANNOUNCEMENTS),
-            _createDrawerItem(context,
-                icon: Icons.people,
-                text: "My Profile",
-                onTap: () => _changeRoute(context, Routes.MY_PROFILE),
-                selected: _selectedRoute == Routes.MY_PROFILE),
-            _createDrawerItem(context,
-                icon: Icons.info,
-                text: "About Us",
-                onTap: () => _changeRoute(context, Routes.ABOUT_US),
-                selected: _selectedRoute == Routes.ABOUT_US)
-        ],
-      )
-    );
+        child: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        _createHeader(context),
+        _createDrawerItem(context,
+            icon: Icons.subject,
+            text: "Subjects",
+            onTap: () => _changeRoute(context, Routes.SUBJECTS),
+            selected: _selectedRoute == Routes.SUBJECTS),
+        _createDrawerItem(context,
+            icon: Icons.announcement,
+            text: "Announcements",
+            onTap: () => _changeRoute(context, Routes.ANNOUNCEMENTS),
+            selected: _selectedRoute == Routes.ANNOUNCEMENTS),
+        _createDrawerItem(context,
+            icon: Icons.people,
+            text: "My Profile",
+            onTap: () => _changeRoute(context, Routes.MY_PROFILE),
+            selected: _selectedRoute == Routes.MY_PROFILE),
+        _createDrawerItem(context,
+            icon: Icons.info,
+            text: "About Us",
+            onTap: () => _changeRoute(context, Routes.ABOUT_US),
+            selected: _selectedRoute == Routes.ABOUT_US)
+      ],
+    ));
   }
 }

@@ -28,9 +28,7 @@ class MyProfile extends StatelessWidget {
           ),
           text.length > 0
               ? Container(
-                  decoration: BoxDecoration(
-                      color: const Color(0xFFFAF0)
-                  ),
+                  decoration: BoxDecoration(color: const Color(0xFFFAF0)),
                   child: SizedBox(
                     width: 500,
                     child: Text(text,
@@ -43,6 +41,42 @@ class MyProfile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget getUserBatchesWidget() {
+    if (_user.batches.length == 0) return Container();
+    List<Widget> userBatchWidgets = <Widget>[];
+
+    userBatchWidgets.add(
+      Text(
+        "Batches:",
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+
+    for (int i = 0; i < _user.batches.length; ++i) {
+      userBatchWidgets.add(Container(
+        decoration: BoxDecoration(color: const Color(0xFFFAF0)),
+        child: SizedBox(
+          width: 500,
+          child: Text(_user.batches[i].name,
+              style: TextStyle(
+                fontSize: 18,
+              )),
+        ),
+      ));
+    }
+
+    return Container(
+        padding: EdgeInsets.only(top: 10.0, left: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: userBatchWidgets,
+        ));
   }
 
   String formatDate(DateTime date) {
@@ -73,7 +107,7 @@ class MyProfile extends StatelessWidget {
               size: 200,
             ),
             createUserInfoText(_user.getFullName(), ""),
-            createUserInfoText("Batch:", _user.batch.name),
+            getUserBatchesWidget(),
             createUserInfoText("Birth Date: ", formatDate(_user.birthDate)),
             createUserInfoText(
                 "Phone No: ", formatPhoneNo(_user.phoneNo.toString())),

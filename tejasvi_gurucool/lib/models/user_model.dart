@@ -34,8 +34,8 @@ class User {
   DateTime _updatedOn;
   DateTime get updatedOn => _updatedOn;
 
-  Batch _batch;
-  Batch get batch => _batch;
+  List<Batch> _batches;
+  List<Batch> get batches => _batches;
 
   String getInitials() {
     try {
@@ -87,7 +87,7 @@ class User {
       String password,
       DateTime createdOn,
       DateTime updatedOn,
-      Batch batch})
+      List<Batch> batches})
       : _id = id,
         _firstName = firstName,
         _lastName = lastName,
@@ -99,5 +99,5 @@ class User {
         _password = password,
         _createdOn = createdOn,
         _updatedOn = updatedOn,
-        _batch = batch;
+        _batches = batches;
 }
