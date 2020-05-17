@@ -13,7 +13,7 @@ class Post {
   User _sender;
   User get sender => _sender;
 
-  Post({id, text, timestamp, sender})
+  Post({int id = -1, String text = "", DateTime timestamp, User sender})
       : _id = id,
         _text = text,
         _timestamp = timestamp,

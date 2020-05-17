@@ -73,7 +73,7 @@ class MyProfile extends StatelessWidget {
               size: 200,
             ),
             createUserInfoText(_user.getFullName(), ""),
-            createUserInfoText("Batch:", "10A"),
+            createUserInfoText("Batch:", _user.batch.name),
             createUserInfoText("Birth Date: ", formatDate(_user.birthDate)),
             createUserInfoText(
                 "Phone No: ", formatPhoneNo(_user.phoneNo.toString())),

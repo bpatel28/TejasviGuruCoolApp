@@ -24,7 +24,7 @@ class AppDrawer extends StatelessWidget {
                   fontWeight: FontWeight.w500),
             ),
             Text(
-              "Batch 10A",
+              _user.batch.name,
               style: TextStyle(
                 color: Colors.black,
               ),

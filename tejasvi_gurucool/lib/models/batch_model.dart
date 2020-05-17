@@ -1,5 +1,5 @@
 import 'package:tejasvi_gurucool/models/subject_model.dart';
-import 'package:tejasvi_gurucool/screens/announcements_screen.dart';
+import 'package:tejasvi_gurucool/models/announcement_model.dart';
 
 class Batch {
   int _id;
@@ -8,13 +8,13 @@ class Batch {
   String _name;
   String get name => _name;
 
-  List<Announcement> _announcements;
+  List<Announcement> _announcements = <Announcement>[];
   List<Announcement> get announcements => _announcements;
 
-  List<Subject> _subjects;
+  List<Subject> _subjects = <Subject>[];
   List<Subject> get subjects => _subjects;
 
-  Batch({id, name, announcements, subjects})
+  Batch({int id, String name, List<Announcement> announcements, List<Subject> subjects})
       : _id = id,
         _name = name,
         _announcements = announcements,

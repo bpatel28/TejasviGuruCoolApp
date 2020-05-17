@@ -11,7 +11,7 @@ class ModuleFile {
   String _type;
   String get type => _type;
 
-  ModuleFile({id, name, path, type})
+  ModuleFile({int id, String name, String path, String type})
       : _id = id,
         _name = name,
         _path = path,

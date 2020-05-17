@@ -13,7 +13,7 @@ class Announcement {
   User _sender;
   User get sender => _sender;
 
-  Announcement({id, text, timestamp, sender})
+  Announcement({int id = -1, String text = "", DateTime timestamp, User sender})
       : _id = id,
         _text = text,
         _timestamp = timestamp,

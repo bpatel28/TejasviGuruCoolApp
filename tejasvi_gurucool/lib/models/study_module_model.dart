@@ -13,10 +13,15 @@ class StudyModule {
   String _longDescription;
   String get longDescription => _longDescription;
 
-  List<ModuleItem> _items;
+  List<ModuleItem> _items = <ModuleItem>[];
   List<ModuleItem> get items => _items;
 
-  StudyModule({id, title, shortDescription, longDescription, items})
+  StudyModule(
+      {int id = -1,
+      String title = "",
+      String shortDescription = "",
+      String longDescription = "",
+      List<ModuleItem> items})
       : _id = id,
         _title = title,
         _shortDescription = shortDescription,

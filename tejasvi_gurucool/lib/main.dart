@@ -6,7 +6,7 @@ import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
 import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
-import 'package:tejasvi_gurucool/models/user_model.dart';
+import 'mock_data.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,19 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final User user = new User(
-      id: -1,
-      firstName: "Brijesh",
-      lastName: "Patel",
-      middleName: "Jayendrabhai",
-      birthDate: new DateTime(1995, 5, 28),
-      phoneNo: 5877001874,
-      username: "b.patel28",
-      email: "b.patel9528@gmail.com",
-      password: "1234567",
-      createdOn: DateTime.now().subtract(new Duration(days: 5)),
-      updatedOn: DateTime.now(),
-    );
+    final user = Mock.user;
     return MaterialApp(
       title: 'Tejasvi GuruCool',
       debugShowCheckedModeBanner: false,
@@ -42,7 +30,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.LOGIN: (context) => LoginScreen(),
         Routes.REGISTER: (context) => RegisterScreen(),
-        Routes.ANNOUNCEMENTS: (context) => Announcement(user),
+        Routes.ANNOUNCEMENTS: (context) => AnnouncementScreen(user),
         Routes.MY_PROFILE: (context) => MyProfile(user),
         Routes.ABOUT_US: (context) => AboutUs(user),
       },
