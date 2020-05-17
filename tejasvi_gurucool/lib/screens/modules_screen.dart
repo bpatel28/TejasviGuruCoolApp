@@ -5,6 +5,7 @@ import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
+import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class ModulesScreenArgs {
   final User user;
@@ -14,17 +15,6 @@ class ModulesScreenArgs {
 }
 
 class ModulesScreen extends StatelessWidget {
-  Widget _getModuleItemsCountCircle(BuildContext context, StudyModule module) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.amberAccent,
-      ),
-      child: Text(module.items.length.toString()),
-    );
-  }
-
   Widget _getStudyModuleCard(BuildContext context, StudyModule module) {
     return Card(
       child: InkWell(
@@ -41,7 +31,11 @@ class ModulesScreen extends StatelessWidget {
                     Text(module.title,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    _getModuleItemsCountCircle(context, module),
+                    CircularBox(
+                      module.items.length.toString(),
+                      padding: 10.0,
+                      color: const Color(0xFFffa500),
+                    ),
                   ],
                 ),
                 Text(module.shortDescription),
@@ -62,10 +56,10 @@ class ModulesScreen extends StatelessWidget {
       body: Center(
         child: subject != null
             ? new ListView.builder(
-              itemCount: subject.modules.length,
-              itemBuilder: (context, index) =>
+                itemCount: subject.modules.length,
+                itemBuilder: (context, index) =>
                     _getStudyModuleCard(context, subject.modules[index]),
-            )
+              )
             : Text("No modules available."),
       ),
       drawer: AppDrawer(args.user, Routes.SUBJECTS),

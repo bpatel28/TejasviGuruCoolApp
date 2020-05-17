@@ -5,6 +5,7 @@ import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/screens/modules_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
+import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class SubjectsScreen extends StatelessWidget {
   final User _user;
@@ -17,17 +18,6 @@ class SubjectsScreen extends StatelessWidget {
       subjects.addAll(batch.subjects);
     });
     return subjects;
-  }
-
-  Widget _getModuleCountCircle(BuildContext context, Subject subject) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.amberAccent,
-      ),
-      child: Text(subject.modules.length.toString()),
-    );
   }
 
   void onSubjectCardTap(BuildContext context, Subject subject) {
@@ -52,7 +42,11 @@ class SubjectsScreen extends StatelessWidget {
                     Text(subject.name,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
-                    _getModuleCountCircle(context, subject),
+                    CircularBox(
+                      subject.modules.length.toString(),
+                      padding: 10.0,
+                      color: const Color(0xFFffa500),
+                    ),
                   ],
                 ),
                 Text(subject.description),
