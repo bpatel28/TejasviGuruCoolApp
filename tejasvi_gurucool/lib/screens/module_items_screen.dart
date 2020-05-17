@@ -45,9 +45,7 @@ Icon getIcon(ModuleItem item, double size) {
 }
 
 void onTapModuleItem(BuildContext context, ModuleItem item) {
-  if (item.file.isVideo()) {
-    Navigator.pushNamed(context, Routes.VIDEO_SCREEN);
-  }
+  
 }
 
 List<Widget> getItems(BuildContext context, StudyModule module) {

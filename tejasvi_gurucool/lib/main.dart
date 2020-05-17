@@ -8,7 +8,6 @@ import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
 import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
-import 'package:tejasvi_gurucool/screens/video_player_screen.dart';
 import 'mock_data.dart';
 
 void main() {
@@ -38,7 +37,6 @@ class MyApp extends StatelessWidget {
         Routes.ANNOUNCEMENTS: (context) => AnnouncementScreen(user),
         Routes.MY_PROFILE: (context) => MyProfileScreen(user),
         Routes.ABOUT_US: (context) => AboutUsScreen(user),
-        Routes.VIDEO_SCREEN: (context) => VideoPlayerScreen(),
       },
       home: SubjectsScreen(user),
     );
