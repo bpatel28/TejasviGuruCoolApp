@@ -1,3 +1,5 @@
+import 'package:tejasvi_gurucool/models/batch_model.dart';
+
 class User {
   int _id;
   int get id => _id;
@@ -31,6 +33,9 @@ class User {
 
   DateTime _updatedOn;
   DateTime get updatedOn => _updatedOn;
+
+  Batch _batch;
+  Batch get batch => _batch;
 
   String getInitials() {
     try {
@@ -81,7 +86,8 @@ class User {
       String email,
       String password,
       DateTime createdOn,
-      DateTime updatedOn})
+      DateTime updatedOn,
+      Batch batch})
       : _id = id,
         _firstName = firstName,
         _lastName = lastName,
@@ -92,5 +98,6 @@ class User {
         _email = email,
         _password = password,
         _createdOn = createdOn,
-        _updatedOn = updatedOn;
+        _updatedOn = updatedOn,
+        _batch = batch;
 }
