@@ -44,7 +44,7 @@ class SubjectsScreen extends StatelessWidget {
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     CircularBox(
                       subject.modules.length.toString(),
-                      padding: 10.0,
+                      padding: EdgeInsets.all(10.0),
                       color: const Color(0xFFffa500),
                     ),
                   ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
+import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class AppDrawer extends StatelessWidget {
   final User _user;
@@ -29,9 +30,24 @@ class AppDrawer extends StatelessWidget {
         margin: EdgeInsets.zero,
         padding: EdgeInsets.only(top: 15.0, left: 10.0),
         decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: headerWidgets,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            CircularBox(
+              _user.getInitials(),
+              padding: EdgeInsets.all(12.0),
+              color: Colors.red,
+              textColor: Colors.white,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: headerWidgets,
+              ),
+            )
+          ],
         ));
   }
 

@@ -3,42 +3,47 @@ import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
+import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class MyProfile extends StatelessWidget {
   final User _user;
+  final Color _cardBackgroundColor = const Color(0xFFfbf7f9);
 
   MyProfile(this._user);
 
   Widget createUserInfoText(String label, String text) {
-    return Container(
-      padding: EdgeInsets.only(top: 10.0, left: 10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+    return Card(
+      color: _cardBackgroundColor,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 1,
-          ),
-          text.length > 0
-              ? Container(
-                  decoration: BoxDecoration(color: const Color(0xFFFAF0)),
-                  child: SizedBox(
-                    width: 500,
-                    child: Text(text,
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
-                )
-              : Container()
-        ],
+            SizedBox(
+              height: 1,
+            ),
+            text.length > 0
+                ? Container(
+                    decoration: BoxDecoration(color: const Color(0xFFFAF0)),
+                    child: SizedBox(
+                      width: 500,
+                      child: Text(text,
+                          style: TextStyle(
+                            fontSize: 18,
+                          )),
+                    ),
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
@@ -70,13 +75,16 @@ class MyProfile extends StatelessWidget {
       ));
     }
 
-    return Container(
-        padding: EdgeInsets.only(top: 10.0, left: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: userBatchWidgets,
-        ));
+    return Card(
+      color: _cardBackgroundColor,
+      child: Container(
+          padding: EdgeInsets.only(top: 10.0, left: 10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: userBatchWidgets,
+          )),
+    );
   }
 
   String formatDate(DateTime date) {
@@ -102,9 +110,12 @@ class MyProfile extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            Icon(
-              Icons.people,
-              size: 200,
+            CircularBox(
+              _user.getInitials(),
+              color: Colors.red,
+              textColor: Colors.white,
+              padding: EdgeInsets.all(15),
+              fontSize: 25.0,
             ),
             createUserInfoText(_user.getFullName(), ""),
             getUserBatchesWidget(),
