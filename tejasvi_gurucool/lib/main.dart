@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tejasvi_gurucool/helpers/route_helper.dart';
+import 'package:tejasvi_gurucool/screens/about_us.dart';
+import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
@@ -32,116 +35,13 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.redAccent,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/login',
+      initialRoute: Routes.LOGIN,
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
+        Routes.LOGIN: (context) => LoginScreen(),
+        Routes.REGISTER: (context) => RegisterScreen(),
+        Routes.ABOUT_US: (context) => AboutUs(user)
       },
-      home: MyHomePage(UniqueKey(), user),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final User _user;
-
-  MyHomePage(Key key, this._user) : super(key: key);
-
-  Widget _createHeader(BuildContext context) {
-    return DrawerHeader(
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.only(top: 15.0, left: 10.0),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              _user.getName(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500),
-            ),
-            Text(
-              "Batch 10A",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            )
-          ],
-        ));
-  }
-
-  Widget _createDrawerItem(BuildContext context,
-      {IconData icon,
-      String text,
-      GestureTapCallback onTap,
-      bool selected: false}) {
-    return ListTile(
-      title: Row(
-        children: <Widget>[
-          Icon(icon),
-          Container(
-            padding: EdgeInsets.only(left: 8.0),
-            child: Text(text),
-          )
-        ],
-      ),
-      selected: selected,
-      onTap: onTap,
-    );
-  }
-
-  void _onSubjectsTap(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void _onAnnouncementsTap(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void _onMyProfileTap(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void _onAboutUsTap(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Home"),
-      ),
-      body: Center(
-        child: Text("Home Page"),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            _createHeader(context),
-            _createDrawerItem(context,
-                icon: Icons.subject,
-                text: "Subjects",
-                onTap: () => _onSubjectsTap(context),
-                selected: true),
-            _createDrawerItem(context,
-                icon: Icons.announcement,
-                text: "Announcements",
-                onTap: () => _onAnnouncementsTap(context)),
-            _createDrawerItem(context,
-                icon: Icons.people,
-                text: "My Profile",
-                onTap: () => _onMyProfileTap(context)),
-            _createDrawerItem(context,
-                icon: Icons.info,
-                text: "About Us",
-                onTap: () => _onAboutUsTap(context))
-          ],
-        ),
-      ),
+      home: SubjectsScreen(user),
     );
   }
 }

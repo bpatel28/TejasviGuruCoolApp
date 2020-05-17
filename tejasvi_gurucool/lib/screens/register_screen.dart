@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -97,7 +98,7 @@ class _RegisterFormState extends State<RegisterForm> {
 
     print(_formKey.currentState.validate());
     showSnackBar(context, "Sign Up Successful");
-    Navigator.of(context).pushNamed("/");
+    Navigator.of(context).pushNamed(Routes.SUBJECTS);
   }
 
   void _onLoginButtonPressed(context) {

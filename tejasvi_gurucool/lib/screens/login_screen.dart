@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -69,11 +70,11 @@ class _LoginFormState extends State<LoginForm> {
     if (!_formKey.currentState.validate()) return;
 
     showSnackBar(context, "Login Successful");
-    Navigator.of(context).pushNamed("/");
+    Navigator.of(context).pushNamed(Routes.SUBJECTS);
   }
 
   void _onSignUpButtonPressed(context) {
-    Navigator.of(context).pushNamed("/register");
+    Navigator.of(context).pushNamed(Routes.REGISTER);
   }
 
   @override
