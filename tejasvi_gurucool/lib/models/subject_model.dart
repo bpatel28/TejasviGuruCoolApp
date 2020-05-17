@@ -10,12 +10,17 @@ class Subject {
   String _description;
   String get description => _description;
 
-  List<StudyModule> _modules = <StudyModule>[];
+  List<StudyModule> _modules;
   List<StudyModule> get modules => _modules;
 
-  Subject({int id = -1, String name = "", String description = "", List<StudyModule> modules})
+  Subject(
+      {int id = -1,
+      String name = "",
+      String description = "",
+      List<StudyModule> modules})
       : _id = id,
         _name = name,
-        _description = description,
-        _modules = modules;
+        _description = description {
+    _modules = modules ?? <StudyModule>[];
+  }
 }

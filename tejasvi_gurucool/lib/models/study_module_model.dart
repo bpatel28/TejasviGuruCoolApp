@@ -25,5 +25,7 @@ class StudyModule {
       : _id = id,
         _title = title,
         _shortDescription = shortDescription,
-        _longDescription = longDescription;
+        _longDescription = longDescription {
+    _items = items ?? <ModuleItem>[];
+  }
 }

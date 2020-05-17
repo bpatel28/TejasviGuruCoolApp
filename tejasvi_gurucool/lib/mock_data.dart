@@ -98,37 +98,37 @@ class Mock {
   static List<StudyModule> scienceModules = <StudyModule>[
     new StudyModule(
         id: 4,
-        title: "Math Module 1",
-        shortDescription: "Math Module 1 short Description",
-        longDescription: "Math Module 1 Long Description"),
+        title: "Science Module 1",
+        shortDescription: "Science Module 1 short Description",
+        longDescription: "Science Module 1 Long Description"),
     new StudyModule(
         id: 5,
-        title: "Math Module 2",
-        shortDescription: "Math Module 2 short Description",
-        longDescription: "Math Module 2 Long Description"),
+        title: "Science Module 2",
+        shortDescription: "Science Module 2 short Description",
+        longDescription: "Science Module 2 Long Description"),
     new StudyModule(
         id: 6,
-        title: "Math Module 3",
-        shortDescription: "Math Module 3 short Description",
-        longDescription: "Math Module 3 Long Description"),
+        title: "Science Module 3",
+        shortDescription: "Science Module 3 short Description",
+        longDescription: "Science Module 3 Long Description"),
   ];
 
   static List<StudyModule> englishModules = <StudyModule>[
     new StudyModule(
         id: 7,
         title: "English Module 1",
-        shortDescription: "Math Module 1 short Description",
-        longDescription: "Math Module 1 Long Description"),
+        shortDescription: "English Module 1 short Description",
+        longDescription: "English Module 1 Long Description"),
     new StudyModule(
         id: 8,
         title: "English Module 2",
-        shortDescription: "Math Module 2 short Description",
-        longDescription: "Math Module 2 Long Description"),
+        shortDescription: "English Module 2 short Description",
+        longDescription: "English Module 2 Long Description"),
     new StudyModule(
         id: 9,
         title: "English Module 3",
-        shortDescription: "Math Module 3 short Description",
-        longDescription: "Math Module 3 Long Description"),
+        shortDescription: "English Module 3 short Description",
+        longDescription: "English Module 3 Long Description"),
   ];
 
   static List<Subject> subjects = <Subject>[
@@ -162,7 +162,5 @@ class Mock {
 
   static List<Batch> batches = <Batch>[
     new Batch(id: 1, name: "10-A", announcements: announcements, subjects: subjects),
-    new Batch(id: 1, name: "10-B", announcements: announcements, subjects: subjects),
-    new Batch(id: 1, name: "10-C", announcements: announcements, subjects: subjects)
   ];
 }

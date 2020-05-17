@@ -14,13 +14,19 @@ class ModuleItem {
   ModuleFile _file;
   ModuleFile get file => _file;
 
-  List<Post> _posts = <Post>[];
+  List<Post> _posts;
   List<Post> get posts => _posts;
 
-  ModuleItem({int id = -1, String title = "", String description = "", ModuleFile file, List<Post> posts})
+  ModuleItem(
+      {int id = -1,
+      String title = "",
+      String description = "",
+      ModuleFile file,
+      List<Post> posts})
       : _id = id,
         _title = title,
         _description = description,
-        _file = file,
-        _posts = posts;
+        _file = file {
+    _posts = posts ?? <Post>[];
+  }
 }

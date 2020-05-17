@@ -11,12 +11,17 @@ class Batch {
   List<Announcement> _announcements = <Announcement>[];
   List<Announcement> get announcements => _announcements;
 
-  List<Subject> _subjects = <Subject>[];
+  List<Subject> _subjects;
   List<Subject> get subjects => _subjects;
 
-  Batch({int id, String name, List<Announcement> announcements, List<Subject> subjects})
+  Batch(
+      {int id,
+      String name,
+      List<Announcement> announcements,
+      List<Subject> subjects})
       : _id = id,
-        _name = name,
-        _announcements = announcements,
-        _subjects = subjects;
+        _name = name {
+    _announcements = announcements ?? <Announcement>[];
+    _subjects = subjects ?? <Subject>[];
+  }
 }

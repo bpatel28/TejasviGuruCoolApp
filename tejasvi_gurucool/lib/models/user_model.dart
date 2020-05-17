@@ -98,6 +98,7 @@ class User {
         _email = email,
         _password = password,
         _createdOn = createdOn,
-        _updatedOn = updatedOn,
-        _batches = batches;
+        _updatedOn = updatedOn {
+    _batches = batches ?? <Batch>[];
+  }
 }
