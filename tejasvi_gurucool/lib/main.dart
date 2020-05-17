@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
-import 'package:tejasvi_gurucool/screens/about_us.dart';
+import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
+import 'package:tejasvi_gurucool/screens/announcements_screen.dart';
+import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
 import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
@@ -39,7 +41,9 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.LOGIN: (context) => LoginScreen(),
         Routes.REGISTER: (context) => RegisterScreen(),
-        Routes.ABOUT_US: (context) => AboutUs(user)
+        Routes.ANNOUNCEMENTS: (context) => Announcement(user),
+        Routes.MY_PROFILE: (context) => MyProfile(user),
+        Routes.ABOUT_US: (context) => AboutUs(user),
       },
       home: SubjectsScreen(user),
     );
