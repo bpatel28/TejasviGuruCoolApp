@@ -7,4 +7,5 @@ class Routes {
   static const ANNOUNCEMENTS = "/announcements";
   static const MY_PROFILE = "/my_profile";
   static const ABOUT_US = "/about_us";
+  static const VIDEO_SCREEN = "/video";
 }
