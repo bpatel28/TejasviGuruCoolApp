@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
@@ -35,6 +36,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _passwordVisible = false;
   final _usernameController = TextEditingController();
@@ -66,11 +68,25 @@ class _LoginFormState extends State<LoginForm> {
     ));
   }
 
-  void _onLoginButtonPressed(context) {
+  Future<void> _onLoginButtonPressed(BuildContext context) async {
     if (!_formKey.currentState.validate()) return;
+    try {
+      final String email = _usernameController.text;
+      final String password = _passwordController.text;
 
-    showSnackBar(context, "Login Successful");
-    Navigator.of(context).pushNamed(Routes.SUBJECTS);
+      final AuthResult authResult = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      if (authResult.user != null) {
+        showSnackBar(context, "Login Successful");
+        Navigator.of(context).pushNamed(Routes.SUBJECTS);
+      } else {
+        throw new Exception("Invalid credentials.");
+      }
+    } on Exception catch (e) {
+      print(e);
+      showSnackBar(context, "Login Failed. Please try again");
+    }
   }
 
   void _onSignUpButtonPressed(context) {
@@ -121,11 +137,17 @@ class _LoginFormState extends State<LoginForm> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Don't have an account.", style: TextStyle(fontSize: 15),),
+              Text(
+                "Don't have an account.",
+                style: TextStyle(fontSize: 15),
+              ),
               InkWell(
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text("Register Now.", style: TextStyle(fontSize: 18),),
+                  child: Text(
+                    "Register Now.",
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 splashColor: Theme.of(context).accentColor,
                 onTap: () => _onSignUpButtonPressed(context),
