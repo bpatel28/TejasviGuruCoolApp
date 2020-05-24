@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
-import 'package:tejasvi_gurucool/screens/announcements_screen.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/screens/modules_screen.dart';
 import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         Routes.REGISTER: (context) => RegisterScreen(),
         Routes.MODULES: (context) => ModulesScreen(),
         Routes.MODULE_ITEMS: (context) => ModuleItemsScreen(),
-        Routes.ANNOUNCEMENTS: (context) => AnnouncementScreen(user),
         Routes.MY_PROFILE: (context) => MyProfileScreen(user),
         Routes.ABOUT_US: (context) => AboutUsScreen(user),
       },
