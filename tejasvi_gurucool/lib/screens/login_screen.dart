@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
@@ -36,7 +36,6 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool _passwordVisible = false;
   final _usernameController = TextEditingController();
@@ -71,18 +70,7 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> _onLoginButtonPressed(BuildContext context) async {
     if (!_formKey.currentState.validate()) return;
     try {
-      final String email = _usernameController.text;
-      final String password = _passwordController.text;
-
-      final AuthResult authResult = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
-
-      if (authResult.user != null) {
-        showSnackBar(context, "Login Successful");
-        Navigator.of(context).pushNamed(Routes.SUBJECTS);
-      } else {
-        throw new Exception("Invalid credentials.");
-      }
+      
     } on Exception catch (e) {
       print(e);
       showSnackBar(context, "Login Failed. Please try again");
