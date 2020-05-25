@@ -1,29 +1,52 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
+import 'package:tejasvi_gurucool/models/user_model.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
+    return WillPopScope(
+      onWillPop: () => showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: Text('Warning'),
+          content: Text('Do you really want to exit?'),
+          actions: [
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () => SystemNavigator.pop(),
+            ),
+            FlatButton(
+              child: Text('No'),
+              onPressed: () => Navigator.pop(c, false),
+            ),
+          ],
+        ),
       ),
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: 50,
-          ),
-          Icon(
-            Icons.people,
-            size: 200,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: LoginForm(),
-          )
-        ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Login"),
+          automaticallyImplyLeading: false,
+        ),
+        body: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+            ),
+            Icon(
+              Icons.people,
+              size: 200,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: LoginForm(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -67,10 +90,12 @@ class _LoginFormState extends State<LoginForm> {
     ));
   }
 
-  Future<void> _onLoginButtonPressed(BuildContext context) async {
+  void _onLoginButtonPressed(BuildContext context, UserBloc bloc) {
     if (!_formKey.currentState.validate()) return;
     try {
-      
+      final String username = _usernameController.text;
+      final String password = _passwordController.text;
+      bloc.add(LoginUser(username: username, password: password));
     } on Exception catch (e) {
       print(e);
       showSnackBar(context, "Login Failed. Please try again");
@@ -78,11 +103,33 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onSignUpButtonPressed(context) {
-    Navigator.of(context).pushNamed(Routes.REGISTER);
+    Future.delayed(Duration.zero, () {
+      Navigator.pushNamed(context, Routes.REGISTER);
+    });
   }
 
   @override
   build(BuildContext context) {
+    return Container(
+      child: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return _buildLoginComplete(context, state.user);
+          } else if (state is LoginLoading) {
+            return _buildLoading(context);
+          } else if (state is LoginFailed) {
+            showSnackBar(context, state.message);
+            return _buildLoginForm(context);
+          } else {
+            return _buildLoginForm(context);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildLoginForm(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -120,7 +167,7 @@ class _LoginFormState extends State<LoginForm> {
             textColor: Colors.white,
             splashColor: Theme.of(context).accentColor,
             child: Text("LOGIN"),
-            onPressed: () => _onLoginButtonPressed(context),
+            onPressed: () => _onLoginButtonPressed(context, context.bloc()),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -144,6 +191,20 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLoading(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildLoginComplete(BuildContext context, User user) {
+    Future.delayed(
+        Duration.zero, () => Navigator.pushNamed(context, Routes.SUBJECTS));
+    return Center(
+      child: Text("Login Successful"),
     );
   }
 }

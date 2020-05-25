@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
@@ -7,30 +9,26 @@ import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class SubjectsScreen extends StatelessWidget {
-  final User _user;
-
-  SubjectsScreen(this._user);
-
-  List<Subject> _getSubjects() {
+  List<Subject> _getSubjects(final User user) {
     List<Subject> subjects = <Subject>[];
-    _user.batches.forEach((batch) {
+    user.batches.forEach((batch) {
       subjects.addAll(batch.subjects);
     });
     return subjects;
   }
 
-  void onSubjectCardTap(BuildContext context, Subject subject) {
+  void onSubjectCardTap(BuildContext context, User user, Subject subject) {
     if (subject != null) {
-      Navigator.pushNamed(context, Routes.MODULES,
-          arguments: ModulesScreenArgs(_user, subject));
+      Future.delayed(Duration.zero, () => Navigator.pushNamed(context, Routes.MODULES,
+          arguments: ModulesScreenArgs(user, subject)));
     }
   }
 
-  Widget _getSubjectCard(BuildContext context, Subject subject) {
+  Widget _getSubjectCard(BuildContext context, User user, Subject subject) {
     return Card(
       child: InkWell(
         splashColor: Theme.of(context).accentColor,
-        onTap: () => onSubjectCardTap(context, subject),
+        onTap: () => onSubjectCardTap(context, user, subject),
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(
@@ -58,19 +56,37 @@ class SubjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final subjects = _getSubjects();
     return Scaffold(
       appBar: AppBar(
         title: Text("Subjects"),
       ),
-      body: Center(
-        child: new ListView.builder(
-          itemCount: subjects.length,
-          itemBuilder: (context, index) =>
-              _getSubjectCard(context, subjects[index]),
-        ),
+      body: Center(child: BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return _buildSubjectsList(context, state.user);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      )),
+      drawer: BlocBuilder<UserBloc, UserState>(
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return AppDrawer(state.user, Routes.SUBJECTS);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
       ),
-      drawer: AppDrawer(_user, Routes.SUBJECTS),
+    );
+  }
+
+  Widget _buildSubjectsList(BuildContext context, User user) {
+    final subjects = _getSubjects(user);
+    return ListView.builder(
+      itemCount: subjects.length,
+      itemBuilder: (context, index) =>
+          _getSubjectCard(context, user, subjects[index]),
     );
   }
 }

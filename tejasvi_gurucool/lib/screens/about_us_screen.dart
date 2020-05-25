@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
-import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 
 class AboutUsScreen extends StatelessWidget {
-  final User _user;
-
-  AboutUsScreen(this._user);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,16 @@ class AboutUsScreen extends StatelessWidget {
           )
         ],
       ),
-      drawer: AppDrawer(_user, Routes.ABOUT_US),
+      drawer: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return AppDrawer(state.user, Routes.ABOUT_US);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      ),
     );
   }
 }

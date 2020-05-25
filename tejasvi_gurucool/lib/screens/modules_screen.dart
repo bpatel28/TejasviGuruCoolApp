@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
@@ -9,17 +11,15 @@ import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class ModulesScreenArgs {
-  final User user;
   final Subject subject;
 
-  ModulesScreenArgs(this.user, this.subject);
+  ModulesScreenArgs(User user, this.subject);
 }
 
 void onTapModuleCard(BuildContext context, StudyModule module) {
   if (module != null) {
-    final ModulesScreenArgs args = ModalRoute.of(context).settings.arguments;
     Navigator.pushNamed(context, Routes.MODULE_ITEMS,
-        arguments: ModuleItemsScreenArgs(args.user, module));
+        arguments: ModuleItemsScreenArgs(module));
   }
 }
 
@@ -71,7 +71,16 @@ class ModulesScreen extends StatelessWidget {
               )
             : Text("No modules available."),
       ),
-      drawer: AppDrawer(args.user, Routes.SUBJECTS),
+      drawer: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return AppDrawer(state.user, Routes.SUBJECTS);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      ),
     );
   }
 }

@@ -19,6 +19,9 @@ class User {
   int _phoneNo;
   int get phoneNo => _phoneNo;
 
+  bool _isMember;
+  bool get isMember => _isMember;
+
   String _username;
   String get username => _username;
 
@@ -36,6 +39,9 @@ class User {
 
   List<Batch> _batches;
   List<Batch> get batches => _batches;
+
+  String _token;
+  String get token => _token;
 
   String getInitials() {
     try {
@@ -87,6 +93,8 @@ class User {
       String password,
       DateTime createdOn,
       DateTime updatedOn,
+      bool isMember,
+      String token,
       List<Batch> batches})
       : _id = id,
         _firstName = firstName,
@@ -98,7 +106,9 @@ class User {
         _email = email,
         _password = password,
         _createdOn = createdOn,
-        _updatedOn = updatedOn {
+        _updatedOn = updatedOn,
+        _isMember = isMember,
+        _token = token {
     _batches = batches ?? <Batch>[];
   }
 }

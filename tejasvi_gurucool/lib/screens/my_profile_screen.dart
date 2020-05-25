@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class MyProfileScreen extends StatelessWidget {
-  final User _user;
   final Color _cardBackgroundColor = const Color(0xFFfbf7f9);
-
-  MyProfileScreen(this._user);
 
   Widget createUserInfoText(String label, String text) {
     return Card(
@@ -48,8 +47,8 @@ class MyProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget getUserBatchesWidget() {
-    if (_user.batches.length == 0) return Container();
+  Widget getUserBatchesWidget(User user) {
+    if (user.batches.length == 0) return Container();
     List<Widget> userBatchWidgets = <Widget>[];
 
     userBatchWidgets.add(
@@ -62,12 +61,12 @@ class MyProfileScreen extends StatelessWidget {
       ),
     );
 
-    for (int i = 0; i < _user.batches.length; ++i) {
+    for (int i = 0; i < user.batches.length; ++i) {
       userBatchWidgets.add(Container(
         decoration: BoxDecoration(color: const Color(0xFFFAF0)),
         child: SizedBox(
           width: 500,
-          child: Text(_user.batches[i].name,
+          child: Text(user.batches[i].name,
               style: TextStyle(
                 fontSize: 18,
               )),
@@ -104,32 +103,54 @@ class MyProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("My Profile"),
       ),
-      body: Center(
+      body: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return _buildMyProfileInfo(context, state.user);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      ),
+      drawer: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return AppDrawer(state.user, Routes.MY_PROFILE);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildMyProfileInfo(BuildContext context, User user) {
+    return Center(
         child: ListView(
           children: <Widget>[
             SizedBox(
               height: 15,
             ),
             CircularBox(
-              _user.getInitials(),
+              user.getInitials(),
               color: Colors.red,
               textColor: Colors.white,
               padding: EdgeInsets.all(15),
               fontSize: 25.0,
             ),
-            createUserInfoText(_user.getFullName(), ""),
-            getUserBatchesWidget(),
-            createUserInfoText("Birth Date: ", formatDate(_user.birthDate)),
+            createUserInfoText(user.getFullName(), ""),
+            getUserBatchesWidget(user),
+            createUserInfoText("Birth Date: ", formatDate(user.birthDate)),
             createUserInfoText(
-                "Phone No: ", formatPhoneNo(_user.phoneNo.toString())),
-            createUserInfoText("Username: ", _user.username),
-            createUserInfoText("Email: ", _user.email),
-            createUserInfoText("Created On: ", formatDate(_user.createdOn)),
-            createUserInfoText("Updated On: ", formatDate(_user.updatedOn)),
+                "Phone No: ", formatPhoneNo(user.phoneNo.toString())),
+            createUserInfoText("Username: ", user.username),
+            createUserInfoText("Email: ", user.email),
+            createUserInfoText("Created On: ", formatDate(user.createdOn)),
+            createUserInfoText("Updated On: ", formatDate(user.updatedOn)),
           ],
         ),
-      ),
-      drawer: AppDrawer(_user, Routes.MY_PROFILE),
-    );
+      );
   }
 }

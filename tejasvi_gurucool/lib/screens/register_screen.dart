@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
+import 'package:tejasvi_gurucool/mock_data.dart';
+import 'package:tejasvi_gurucool/models/batch_model.dart';
+import 'package:tejasvi_gurucool/models/user_model.dart';
 
 class RegisterScreen extends StatelessWidget {
   @override
@@ -35,6 +40,7 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  Batch batch = Mock.batches[0];
 
   bool _passwordVisible = false;
 
@@ -45,6 +51,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _birthDateController = TextEditingController();
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -73,6 +80,16 @@ class _RegisterFormState extends State<RegisterForm> {
     return null;
   }
 
+  String _validateBirthDate(String value) {
+    if (value.isEmpty) {
+      return "Enter Birth Date.";
+    }
+    if (DateTime.tryParse(value) == null) {
+      return "Invalid format for date. please enter in format yyyy-dd-mm.";
+    }
+    return null;
+  }
+
   String _validateUsername(String value) {
     if (value.isEmpty) {
       return "User name can not be empty.";
@@ -93,20 +110,57 @@ class _RegisterFormState extends State<RegisterForm> {
     ));
   }
 
-  void _onSignUpButtonPressed(BuildContext context) async {
+  void _onSignUpButtonPressed(BuildContext context, UserBloc bloc) async {
     if (!_formKey.currentState.validate()) return;
-
-    print(_formKey.currentState.validate());
-    showSnackBar(context, "Sign Up Successful");
-    Navigator.of(context).pushNamed(Routes.SUBJECTS);
+    try {
+      final String firstName = _firstNameController.text;
+      final String lastName = _lastNameController.text;
+      final String middleName = _middleNameController.text;
+      final int phoneNo = int.tryParse(_phoneNoController.text);
+      final DateTime birthDate = DateTime.tryParse(_birthDateController.text);
+      final String username = _usernameController.text;
+      final String email = _emailController.text;
+      final String password = _passwordController.text;
+      bloc.add(RegisterUser(
+        batches: <int>[batch.id ?? -1],
+        birthDate: birthDate,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        middleName: middleName,
+        password: password,
+        phoneNo: phoneNo,
+        username: username,
+      ));
+    } on Exception catch (e) {
+      print(e);
+      showSnackBar(context, "Login Failed. Please try again");
+    }
   }
 
   void _onLoginButtonPressed(context) {
-    Navigator.pop(context);
+    Future.delayed(Duration.zero, () => Navigator.pop(context));
   }
 
   @override
   build(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (BuildContext context, UserState state) {
+        if (state is AuthenticatedUser) {
+          return _buildRegistrationComplete(context, state.user);
+        } else if (state is RegisterLoading) {
+          return _buildLoading(context);
+        } else if (state is RegistrationFailed) {
+          showSnackBar(context, state.message);
+          return _buildRegistrationForm();
+        } else {
+          return _buildRegistrationForm();
+        }
+      },
+    );
+  }
+
+  Widget _buildRegistrationForm() {
     return Form(
       key: _formKey,
       child: Column(
@@ -148,6 +202,17 @@ class _RegisterFormState extends State<RegisterForm> {
             height: 10,
           ),
           TextFormField(
+            controller: _birthDateController,
+            validator: _validateBirthDate,
+            decoration: InputDecoration(
+                labelText: "Enter Birth Date: yyyy-dd-mm",
+                border: OutlineInputBorder()),
+            keyboardType: TextInputType.datetime,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
             controller: _usernameController,
             validator: _validateUsername,
             decoration: InputDecoration(
@@ -180,23 +245,53 @@ class _RegisterFormState extends State<RegisterForm> {
             obscureText: !_passwordVisible,
           ),
           SizedBox(
-            height: 10,
+            height: 5,
+          ),
+          DropdownButton(
+            value: batch.id,
+            icon: Icon(Icons.arrow_downward),
+            iconSize: 24,
+            elevation: 16,
+            style: TextStyle(color: Colors.deepPurple),
+            underline: Container(
+              height: 2.0,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (int newValue) {
+              setState(() {
+                batch =
+                    Mock.batches.where((batch) => batch.id == newValue).first ??
+                        null;
+              });
+            },
+            items: Mock.batches.map<DropdownMenuItem<int>>((Batch batch) {
+              return DropdownMenuItem(value: batch.id, child: Text(batch.name));
+            }).toList(),
+          ),
+          SizedBox(
+            height: 5,
           ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
             splashColor: Theme.of(context).accentColor,
             child: Text("SIGN UP"),
-            onPressed: () => _onSignUpButtonPressed(context),
+            onPressed: () => _onSignUpButtonPressed(context, context.bloc()),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Already have an account.", style: TextStyle(fontSize: 15),),
+              Text(
+                "Already have an account.",
+                style: TextStyle(fontSize: 15),
+              ),
               InkWell(
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text("Login Now.", style: TextStyle(fontSize: 18),),
+                  child: Text(
+                    "Login Now.",
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 splashColor: Theme.of(context).accentColor,
                 onTap: () => _onLoginButtonPressed(context),
@@ -205,6 +300,20 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildLoading(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildRegistrationComplete(BuildContext context, User user) {
+    Future.delayed(
+        Duration.zero, () => Navigator.pushNamed(context, Routes.SUBJECTS));
+    return Center(
+      child: Text("Registration Successful"),
     );
   }
 }

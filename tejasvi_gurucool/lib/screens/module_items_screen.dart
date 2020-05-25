@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
-import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 
 class ModuleItemsScreenArgs {
-  final User user;
   final StudyModule studyModule;
 
-  ModuleItemsScreenArgs(this.user, this.studyModule);
+  ModuleItemsScreenArgs(this.studyModule);
 }
 
 Widget getHeader(BuildContext context, StudyModule module) {
@@ -101,7 +101,16 @@ class ModuleItemsScreen extends StatelessWidget {
           children: getItems(context, args.studyModule),
         ),
       ),
-      drawer: AppDrawer(args.user, Routes.SUBJECTS),
+      drawer: BlocBuilder<UserBloc, UserState>(
+        bloc: context.bloc(),
+        builder: (BuildContext context, UserState state) {
+          if (state is AuthenticatedUser) {
+            return AppDrawer(state.user, Routes.SUBJECTS);
+          } else {
+            return Text("Something went wrong.");
+          }
+        },
+      ),
     );
   }
 }
