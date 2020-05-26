@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/repository/user_repository.dart';
 

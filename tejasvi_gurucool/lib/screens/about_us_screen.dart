@@ -37,7 +37,7 @@ class AboutUsScreen extends StatelessWidget {
         bloc: context.bloc(),
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(state.user, Routes.ABOUT_US);
+            return AppDrawer(Routes.ABOUT_US, state.user,);
           } else {
             return Text("Something went wrong.");
           }

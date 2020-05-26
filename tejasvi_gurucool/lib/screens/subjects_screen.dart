@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
@@ -8,19 +9,20 @@ import 'package:tejasvi_gurucool/screens/modules_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
-class SubjectsScreen extends StatelessWidget {
-  List<Subject> _getSubjects(final User user) {
-    List<Subject> subjects = <Subject>[];
-    user.batches.forEach((batch) {
-      subjects.addAll(batch.subjects);
-    });
-    return subjects;
-  }
+class SubjectsScreen extends StatefulWidget {
+  @override
+  _SubjectScreenState createState() => _SubjectScreenState();
+}
+
+class _SubjectScreenState extends State<SubjectsScreen> {
+  bool _subjectLoaded = false;
 
   void onSubjectCardTap(BuildContext context, User user, Subject subject) {
     if (subject != null) {
-      Future.delayed(Duration.zero, () => Navigator.pushNamed(context, Routes.MODULES,
-          arguments: ModulesScreenArgs(user, subject)));
+      Future.delayed(
+          Duration.zero,
+          () => Navigator.pushNamed(context, Routes.MODULES,
+              arguments: ModulesScreenArgs(user, subject)));
     }
   }
 
@@ -60,19 +62,21 @@ class SubjectsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Subjects"),
       ),
-      body: Center(child: BlocBuilder<UserBloc, UserState>(
-        builder: (BuildContext context, UserState state) {
-          if (state is AuthenticatedUser) {
-            return _buildSubjectsList(context, state.user);
-          } else {
-            return Text("Something went wrong.");
-          }
-        },
-      )),
+      body: Center(
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (BuildContext context, UserState state) {
+            if (state is AuthenticatedUser) {
+              return _buildSubjectsList(context, state.user);
+            } else {
+              return Text("Something went wrong.");
+            }
+          },
+        ),
+      ),
       drawer: BlocBuilder<UserBloc, UserState>(
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(state.user, Routes.SUBJECTS);
+            return AppDrawer(Routes.SUBJECTS, state.user);
           } else {
             return Text("Something went wrong.");
           }
@@ -82,11 +86,32 @@ class SubjectsScreen extends StatelessWidget {
   }
 
   Widget _buildSubjectsList(BuildContext context, User user) {
-    final subjects = _getSubjects(user);
-    return ListView.builder(
-      itemCount: subjects.length,
-      itemBuilder: (context, index) =>
-          _getSubjectCard(context, user, subjects[index]),
+    return BlocBuilder<BatchBloc, BatchState>(
+      builder: (BuildContext context, BatchState state) {
+        if (state is SubjectsLoaded) {
+          return ListView.builder(
+            itemCount: state.subjects.length,
+            itemBuilder: (context, index) =>
+                _getSubjectCard(context, user, state.subjects[index]),
+          );
+        } else {
+          return _buildSubjectLoader(context, context.bloc(), user);
+        }
+      },
+    );
+  }
+
+  Widget _buildSubjectLoader(BuildContext context, BatchBloc bloc, User user) {
+    if (!_subjectLoaded) {
+      Future.delayed(Duration.zero, () {
+        this.setState(() {
+          _subjectLoaded = true;
+        });
+        bloc.add(FetchSubjects(user.batches));
+      });
+    }
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

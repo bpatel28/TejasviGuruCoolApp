@@ -14,8 +14,8 @@ class ModuleItem {
   ModuleFile _file;
   ModuleFile get file => _file;
 
-  List<Post> _posts;
-  List<Post> get posts => _posts;
+  List<int> _posts;
+  List<int> get posts => _posts;
 
   ModuleItem(
       {int id = -1,
@@ -27,6 +27,6 @@ class ModuleItem {
         _title = title,
         _description = description,
         _file = file {
-    _posts = posts ?? <Post>[];
+    _posts = posts ?? <int>[];
   }
 }

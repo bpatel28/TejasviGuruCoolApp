@@ -1,5 +1,3 @@
-import 'package:tejasvi_gurucool/models/module_item.dart';
-
 class StudyModule {
   int _id;
   int get id => _id;
@@ -13,19 +11,19 @@ class StudyModule {
   String _longDescription;
   String get longDescription => _longDescription;
 
-  List<ModuleItem> _items = <ModuleItem>[];
-  List<ModuleItem> get items => _items;
+  List<int> _items = <int>[];
+  List<int> get items => _items;
 
   StudyModule(
       {int id = -1,
       String title = "",
       String shortDescription = "",
       String longDescription = "",
-      List<ModuleItem> items})
+      List<int> items})
       : _id = id,
         _title = title,
         _shortDescription = shortDescription,
         _longDescription = longDescription {
-    _items = items ?? <ModuleItem>[];
+    _items = items ?? <int>[];
   }
 }

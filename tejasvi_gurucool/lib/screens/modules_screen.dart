@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
+import 'package:tejasvi_gurucool/repository/subject_repository.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
@@ -23,7 +25,14 @@ void onTapModuleCard(BuildContext context, StudyModule module) {
   }
 }
 
-class ModulesScreen extends StatelessWidget {
+class ModulesScreen extends StatefulWidget {
+  @override
+  _ModuleScreenState createState() => _ModuleScreenState();
+}
+
+class _ModuleScreenState extends State<ModulesScreen> {
+  bool _moduleLoaded = false;
+
   Widget _getStudyModuleCard(BuildContext context, StudyModule module) {
     return Card(
       child: InkWell(
@@ -62,25 +71,56 @@ class ModulesScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(subject != null ? subject.name : ""),
       ),
-      body: Center(
-        child: subject != null
-            ? new ListView.builder(
-                itemCount: subject.modules.length,
-                itemBuilder: (context, index) =>
-                    _getStudyModuleCard(context, subject.modules[index]),
-              )
-            : Text("No modules available."),
+      body: BlocProvider(
+        create: (BuildContext context) => SubjectBloc(SubjectRepository()),
+        child: Center(
+          child: subject != null
+              ? BlocBuilder<SubjectBloc, SubjectState>(
+                  builder: (BuildContext context, SubjectState state) {
+                    if (state is ModulesLoaded) {
+                      return _buildModuleList(context, subject, state.modules);
+                    } else {
+                      return _buildModulesLoader(
+                          context, context.bloc(), subject.id);
+                    }
+                  },
+                )
+              : Text("No modules available."),
+        ),
       ),
       drawer: BlocBuilder<UserBloc, UserState>(
         bloc: context.bloc(),
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(state.user, Routes.SUBJECTS);
+            return AppDrawer(Routes.SUBJECTS, state.user);
           } else {
             return Text("Something went wrong.");
           }
         },
       ),
+    );
+  }
+
+  Widget _buildModuleList(
+      BuildContext context, Subject subject, List<StudyModule> modules) {
+    return new ListView.builder(
+        itemCount: modules.length,
+        itemBuilder: (context, index) =>
+            _getStudyModuleCard(context, modules[index]));
+  }
+
+  Widget _buildModulesLoader(
+      BuildContext context, SubjectBloc bloc, int subjectId) {
+    if (!_moduleLoaded) {
+      Future.delayed(Duration.zero, () {
+        this.setState(() {
+          _moduleLoaded = true;
+        });
+        bloc.add(FetchModulesEvent(subjectId));
+      });
+    }
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

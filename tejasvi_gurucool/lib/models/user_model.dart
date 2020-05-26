@@ -1,5 +1,3 @@
-import 'package:tejasvi_gurucool/models/batch_model.dart';
-
 class User {
   int _id;
   int get id => _id;
@@ -37,8 +35,8 @@ class User {
   DateTime _updatedOn;
   DateTime get updatedOn => _updatedOn;
 
-  List<Batch> _batches;
-  List<Batch> get batches => _batches;
+  List<int> _batches;
+  List<int> get batches => _batches;
 
   String _token;
   String get token => _token;
@@ -95,7 +93,7 @@ class User {
       DateTime updatedOn,
       bool isMember,
       String token,
-      List<Batch> batches})
+      List<int> batches})
       : _id = id,
         _firstName = firstName,
         _lastName = lastName,
@@ -109,6 +107,6 @@ class User {
         _updatedOn = updatedOn,
         _isMember = isMember,
         _token = token {
-    _batches = batches ?? <Batch>[];
+    _batches = batches ?? <int>[];
   }
 }

@@ -20,7 +20,7 @@ class Mock {
       password: "1234567",
       createdOn: DateTime.now().subtract(new Duration(days: 5)),
       updatedOn: DateTime.now(),
-      batches: batches
+      batches: <int>[1]
       );
 
   static User user2 = new User(
@@ -35,7 +35,7 @@ class Mock {
       password: "789123456",
       createdOn: DateTime.now().subtract(new Duration(days: 5)),
       updatedOn: DateTime.now(),
-      batches: batches,
+      batches: <int>[1],
       );
 
   static List<ModuleFile> files = <ModuleFile>[
@@ -82,19 +82,21 @@ class Mock {
         description: "Math Module 1 Item 4 Description"),
   ];
 
+  static List<ModuleItem> moduleItems = mathModule1Items1 + mathModule1Items2;
+
   static List<StudyModule> mathModules = <StudyModule>[
     new StudyModule(
         id: 1,
         title: "Math Module 1",
         shortDescription: "Math Module 1 short Description",
         longDescription: "Math Module 1 Long Description",
-        items: mathModule1Items1),
+        items: <int>[1, 2, 3, 4]),
     new StudyModule(
         id: 2,
         title: "Math Module 2",
         shortDescription: "Math Module 2 short Description",
         longDescription: "Math Module 2 Long Description",
-        items: mathModule1Items2),
+        items: <int>[5, 6, 7, 8]),
     new StudyModule(
         id: 3,
         title: "Math Module 3",
@@ -138,22 +140,24 @@ class Mock {
         longDescription: "English Module 3 Long Description"),
   ];
 
+  static List<StudyModule> modules = mathModules + scienceModules + englishModules;
+
   static List<Subject> subjects = <Subject>[
     new Subject(
         id: 1,
         name: "Maths",
         description: "Maths for 10-A",
-        modules: mathModules),
+        modules: <int>[1, 2, 3]),
     new Subject(
-        id: 1,
+        id: 2,
         name: "Science",
         description: "Science for 10-A",
-        modules: scienceModules),
+        modules: <int>[4, 5, 6]),
     new Subject(
-        id: 1,
+        id: 3,
         name: "English",
         description: "English for 10-A",
-        modules: englishModules),
+        modules: <int>[7, 8, 9]),
   ];
 
   static List<Announcement> announcements = <Announcement>[
@@ -168,6 +172,6 @@ class Mock {
   ];
 
   static List<Batch> batches = <Batch>[
-    new Batch(id: 1, name: "10-A", announcements: announcements, subjects: subjects),
+    new Batch(id: 1, name: "10-A", announcements: announcements, subjects: <int>[1, 2, 3]),
   ];
 }

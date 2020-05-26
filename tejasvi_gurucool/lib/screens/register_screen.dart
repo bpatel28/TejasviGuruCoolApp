@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
-import 'package:tejasvi_gurucool/mock_data.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 
@@ -40,7 +40,8 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  Batch batch = Mock.batches[0];
+  Batch batch;
+  bool _batchLoaded = false;
 
   bool _passwordVisible = false;
 
@@ -112,6 +113,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _onSignUpButtonPressed(BuildContext context, UserBloc bloc) async {
     if (!_formKey.currentState.validate()) return;
+    if (batch == null) {
+      showSnackBar(context, "Please select batch.");
+      return;
+    }
     try {
       final String firstName = _firstNameController.text;
       final String lastName = _lastNameController.text;
@@ -122,7 +127,7 @@ class _RegisterFormState extends State<RegisterForm> {
       final String email = _emailController.text;
       final String password = _passwordController.text;
       bloc.add(RegisterUser(
-        batches: <int>[batch.id ?? -1],
+        batches: <int>[batch.id],
         birthDate: birthDate,
         email: email,
         firstName: firstName,
@@ -157,6 +162,41 @@ class _RegisterFormState extends State<RegisterForm> {
           return _buildRegistrationForm();
         }
       },
+    );
+  }
+
+  Widget _buildBatchesDropDown(List<Batch> batches) {
+    return DropdownButton(
+      icon: Icon(Icons.arrow_downward),
+      value: batch?.id ?? null,
+      hint: Text("Selct Batch"),
+      iconSize: 24,
+      elevation: 16,
+      isExpanded: true,
+      style: TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2.0,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (int newValue) {
+        setState(() {
+          batch =
+              batches.where((item) => item.id == newValue).first ?? null;
+        });
+      },
+      items: batches.map<DropdownMenuItem<int>>((Batch batch) {
+        return DropdownMenuItem(value: batch.id, child: Text(batch.name));
+      }).toList(),
+    );
+  }
+
+  Widget _buildLoadingBatches(BuildContext context, BatchBloc bloc) {
+    if (!_batchLoaded) {
+      _batchLoaded = true;
+      bloc.add(FetchBatches());
+    }
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -205,7 +245,7 @@ class _RegisterFormState extends State<RegisterForm> {
             controller: _birthDateController,
             validator: _validateBirthDate,
             decoration: InputDecoration(
-                labelText: "Enter Birth Date: yyyy-dd-mm",
+                labelText: "Enter Birth Date: yyyy-mm-dd",
                 border: OutlineInputBorder()),
             keyboardType: TextInputType.datetime,
           ),
@@ -247,26 +287,14 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 5,
           ),
-          DropdownButton(
-            value: batch.id,
-            icon: Icon(Icons.arrow_downward),
-            iconSize: 24,
-            elevation: 16,
-            style: TextStyle(color: Colors.deepPurple),
-            underline: Container(
-              height: 2.0,
-              color: Colors.deepPurpleAccent,
-            ),
-            onChanged: (int newValue) {
-              setState(() {
-                batch =
-                    Mock.batches.where((batch) => batch.id == newValue).first ??
-                        null;
-              });
+          BlocBuilder<BatchBloc, BatchState>(
+            builder: (BuildContext context, BatchState state) {
+              if (state is AllBatchLoaded) {
+                return _buildBatchesDropDown(state.batches);
+              } else {
+                return _buildLoadingBatches(context, context.bloc());
+              }
             },
-            items: Mock.batches.map<DropdownMenuItem<int>>((Batch batch) {
-              return DropdownMenuItem(value: batch.id, child: Text(batch.name));
-            }).toList(),
           ),
           SizedBox(
             height: 5,

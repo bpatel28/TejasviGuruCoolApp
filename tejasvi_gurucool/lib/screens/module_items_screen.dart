@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/module_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
+import 'package:tejasvi_gurucool/repository/module_repository.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 
 class ModuleItemsScreenArgs {
@@ -14,79 +16,86 @@ class ModuleItemsScreenArgs {
   ModuleItemsScreenArgs(this.studyModule);
 }
 
-Widget getHeader(BuildContext context, StudyModule module) {
-  return Card(
-    child: Padding(
-      padding: EdgeInsets.all(10),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Text(
-          module.longDescription,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold),
+class ModuleItemsScreen extends StatefulWidget {
+  @override
+  _ModuleItemsScreenState createState() => _ModuleItemsScreenState();
+}
+
+class _ModuleItemsScreenState extends State<ModuleItemsScreen> {
+  bool _itemsLoaded = false;
+
+  Widget getHeader(BuildContext context, StudyModule module) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Text(
+            module.longDescription,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
       ),
-    ),
-  );
-}
-
-Icon getIcon(ModuleItem item, double size) {
-  final ModuleFile file = item.file;
-  if (file != null && file.isImage())
-    return Icon(Icons.image, size: size);
-  else if (file != null && file.isVideo())
-    return Icon(Icons.video_library, size: size);
-  else if (file != null && file.isPDF())
-    return Icon(Icons.assignment, size: size);
-  else
-    return Icon(Icons.description, size: size);
-}
-
-void onTapModuleItem(BuildContext context, ModuleItem item) {
-  
-}
-
-List<Widget> getItems(BuildContext context, StudyModule module) {
-  List<Widget> items = <Widget>[];
-
-  items.add(getHeader(context, module));
-
-  for (int i = 0; i < module.items.length; ++i) {
-    final ModuleItem item = module.items[i];
-    if (item != null) {
-      items.add(Card(
-        child: InkWell(
-            onTap: () => onTapModuleItem(context, item),
-            splashColor: Theme.of(context).accentColor,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  getIcon(item, 30.0),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        item.title,
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      Text(item.description, style: TextStyle(fontSize: 10.0)),
-                    ],
-                  )
-                ],
-              ),
-            )),
-      ));
-    }
+    );
   }
 
-  return items;
-}
+  Icon getIcon(ModuleItem item, double size) {
+    final ModuleFile file = item.file;
+    if (file != null && file.isImage())
+      return Icon(Icons.image, size: size);
+    else if (file != null && file.isVideo())
+      return Icon(Icons.video_library, size: size);
+    else if (file != null && file.isPDF())
+      return Icon(Icons.assignment, size: size);
+    else
+      return Icon(Icons.description, size: size);
+  }
 
-class ModuleItemsScreen extends StatelessWidget {
+  void onTapModuleItem(BuildContext context, ModuleItem item) {}
+
+  List<Widget> getItems(BuildContext context, final StudyModule module,
+      final List<ModuleItem> moduleItems) {
+    List<Widget> items = <Widget>[];
+
+    items.add(getHeader(context, module));
+
+    for (int i = 0; i < moduleItems.length; ++i) {
+      final ModuleItem item = moduleItems[i];
+      if (item != null) {
+        items.add(Card(
+          child: InkWell(
+              onTap: () => onTapModuleItem(context, item),
+              splashColor: Theme.of(context).accentColor,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  children: <Widget>[
+                    getIcon(item, 30.0),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          item.title,
+                          style: TextStyle(fontSize: 15.0),
+                        ),
+                        Text(item.description,
+                            style: TextStyle(fontSize: 10.0)),
+                      ],
+                    )
+                  ],
+                ),
+              )),
+        ));
+      }
+    }
+
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ModuleItemsScreenArgs args =
@@ -95,22 +104,49 @@ class ModuleItemsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(args.studyModule.title),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: ListView(
-          children: getItems(context, args.studyModule),
+      body: BlocProvider(
+        create: (BuildContext context) => ModuleBloc(ModuleRepository()),
+        child: Container(
+          padding: EdgeInsets.all(10.0),
+          child: BlocBuilder<ModuleBloc, ModuleState>(
+            builder: (context, state) {
+              if (state is ItemsLoaded) {
+                return ListView(
+                  children: getItems(context, args.studyModule, state.items),
+                );
+              } else {
+                return _buildModulesLoader(
+                    context, context.bloc(), args.studyModule.id);
+              }
+            },
+          ),
         ),
       ),
       drawer: BlocBuilder<UserBloc, UserState>(
         bloc: context.bloc(),
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(state.user, Routes.SUBJECTS);
+            return AppDrawer(Routes.SUBJECTS, state.user);
           } else {
             return Text("Something went wrong.");
           }
         },
       ),
+    );
+  }
+
+  Widget _buildModulesLoader(
+      BuildContext context, ModuleBloc bloc, int moduleId) {
+    if (!_itemsLoaded) {
+      Future.delayed(Duration.zero, () {
+        this.setState(() {
+          _itemsLoaded = true;
+        });
+        bloc.add(FetchModuleItemsEvent(moduleId));
+      });
+    }
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

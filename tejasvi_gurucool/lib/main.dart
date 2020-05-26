@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
+import 'package:tejasvi_gurucool/repository/batch_repository.dart';
 import 'package:tejasvi_gurucool/repository/user_repository.dart';
 import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
@@ -23,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<UserBloc>(
           create: (BuildContext context) => UserBloc(UserRepository()),
+        ),
+        BlocProvider<BatchBloc>(
+          create: (BuildContext context) => BatchBloc(BatchRepository()),
         ),
       ],
       child: MaterialApp(

@@ -7,7 +7,7 @@ class AppDrawer extends StatelessWidget {
   final User _user;
   final String _selectedRoute;
 
-  AppDrawer(this._user, this._selectedRoute);
+  AppDrawer(this._selectedRoute, this._user);
 
   Widget _createHeader(BuildContext context) {
     List<Widget> headerWidgets = <Widget>[];
@@ -18,14 +18,14 @@ class AppDrawer extends StatelessWidget {
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w500),
       ),
     );
-    for (int i = 0; i < _user.batches.length; ++i) {
-      headerWidgets.add(Text(
-        _user.batches[i].name,
-        style: TextStyle(
-          color: Colors.white
-        ),
-      ));
-    }
+    // for (int i = 0; i < _user.batches.length; ++i) {
+    //   headerWidgets.add(Text(
+    //     _batches[i].name,
+    //     style: TextStyle(
+    //       color: Colors.white
+    //     ),
+    //   ));
+    // }
     return DrawerHeader(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.only(top: 15.0, left: 10.0),
