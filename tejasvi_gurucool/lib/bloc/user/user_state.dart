@@ -39,8 +39,9 @@ class RegistrationFailed extends UserState {
 
 class AuthenticatedUser extends UserState {
   final User user;
+  final List<Batch> batches;
 
-  AuthenticatedUser(this.user);
+  AuthenticatedUser(this.user, this.batches);
 
   @override
   List<Object> get props => [user];

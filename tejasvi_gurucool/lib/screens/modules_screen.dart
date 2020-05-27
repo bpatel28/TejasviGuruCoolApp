@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/subject_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
@@ -18,20 +18,13 @@ class ModulesScreenArgs {
   ModulesScreenArgs(User user, this.subject);
 }
 
-void onTapModuleCard(BuildContext context, StudyModule module) {
-  if (module != null) {
-    Navigator.pushNamed(context, Routes.MODULE_ITEMS,
-        arguments: ModuleItemsScreenArgs(module));
+class ModulesScreen extends StatelessWidget {
+  void onTapModuleCard(BuildContext context, StudyModule module) {
+    if (module != null) {
+      Navigator.pushNamed(context, Routes.MODULE_ITEMS,
+          arguments: ModuleItemsScreenArgs(module));
+    }
   }
-}
-
-class ModulesScreen extends StatefulWidget {
-  @override
-  _ModuleScreenState createState() => _ModuleScreenState();
-}
-
-class _ModuleScreenState extends State<ModulesScreen> {
-  bool _moduleLoaded = false;
 
   Widget _getStudyModuleCard(BuildContext context, StudyModule module) {
     return Card(
@@ -79,9 +72,17 @@ class _ModuleScreenState extends State<ModulesScreen> {
                   builder: (BuildContext context, SubjectState state) {
                     if (state is ModulesLoaded) {
                       return _buildModuleList(context, subject, state.modules);
+                    } else if (state is LoadingModules) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
-                      return _buildModulesLoader(
-                          context, context.bloc(), subject.id);
+                      Future.delayed(
+                          Duration.zero,
+                          () => context
+                              .bloc<SubjectBloc>()
+                              .add(FetchModulesEvent(subject.id)));
+                      return Container();
                     }
                   },
                 )
@@ -92,7 +93,7 @@ class _ModuleScreenState extends State<ModulesScreen> {
         bloc: context.bloc(),
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.SUBJECTS, state.user);
+            return AppDrawer(Routes.SUBJECTS, state.user, state.batches);
           } else {
             return Text("Something went wrong.");
           }
@@ -107,20 +108,5 @@ class _ModuleScreenState extends State<ModulesScreen> {
         itemCount: modules.length,
         itemBuilder: (context, index) =>
             _getStudyModuleCard(context, modules[index]));
-  }
-
-  Widget _buildModulesLoader(
-      BuildContext context, SubjectBloc bloc, int subjectId) {
-    if (!_moduleLoaded) {
-      Future.delayed(Duration.zero, () {
-        this.setState(() {
-          _moduleLoaded = true;
-        });
-        bloc.add(FetchModulesEvent(subjectId));
-      });
-    }
-    return Center(
-      child: CircularProgressIndicator(),
-    );
   }
 }

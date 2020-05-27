@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
+import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class AppDrawer extends StatelessWidget {
   final User _user;
   final String _selectedRoute;
+  final List<Batch> _batches;
 
-  AppDrawer(this._selectedRoute, this._user);
+  AppDrawer(this._selectedRoute, this._user, this._batches);
+
+  List<Batch> getUserBatches() {
+    if (_user.batches.length == 0 || (_batches != null && _batches.length == 0))
+      return <Batch>[];
+
+    List<Batch> userBatches = <Batch>[];
+
+    _user.batches.forEach((userBatchItemId) {
+      _batches.forEach((batchItem) {
+        if (batchItem.id == userBatchItemId) {
+          userBatches.add(batchItem);
+        }
+      });
+    });
+
+    return userBatches;
+  }
 
   Widget _createHeader(BuildContext context) {
     List<Widget> headerWidgets = <Widget>[];
@@ -18,14 +37,13 @@ class AppDrawer extends StatelessWidget {
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w500),
       ),
     );
-    // for (int i = 0; i < _user.batches.length; ++i) {
-    //   headerWidgets.add(Text(
-    //     _batches[i].name,
-    //     style: TextStyle(
-    //       color: Colors.white
-    //     ),
-    //   ));
-    // }
+    final userBatches = getUserBatches();
+    for (int i = 0; i < userBatches.length; ++i) {
+      headerWidgets.add(Text(
+        userBatches[i].name,
+        style: TextStyle(color: Colors.white),
+      ));
+    }
     return DrawerHeader(
         margin: EdgeInsets.zero,
         padding: EdgeInsets.only(top: 15.0, left: 10.0),

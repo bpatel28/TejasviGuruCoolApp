@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
+import 'package:tejasvi_gurucool/repository/batch_repository.dart';
 import 'package:tejasvi_gurucool/repository/user_repository.dart';
 
 part 'user_event.dart';
@@ -11,8 +13,9 @@ part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
+  final BatchRepository _batchRepository;
 
-  UserBloc(this._userRepository);
+  UserBloc(this._userRepository, this._batchRepository);
 
   @override
   UserState get initialState => LoggedOut();
@@ -28,7 +31,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           username: event.username,
           password: event.password,
         );
-        yield AuthenticatedUser(user);
+        final batches = await _batchRepository.getAllBatches();
+
+        yield AuthenticatedUser(user, batches);
       } on Exception catch (e) {
         print(e);
         yield LoginFailed("Login Failed");
@@ -49,7 +54,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           email: event.email,
           password: event.password,
         );
-        yield AuthenticatedUser(user);
+        final batches = await _batchRepository.getAllBatches();
+        yield AuthenticatedUser(user, batches);
       } on Exception catch (e) {
         print(e);
         yield RegistrationFailed("Registration Failed");

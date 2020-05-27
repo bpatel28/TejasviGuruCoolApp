@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/module_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/module/module_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
@@ -16,14 +16,7 @@ class ModuleItemsScreenArgs {
   ModuleItemsScreenArgs(this.studyModule);
 }
 
-class ModuleItemsScreen extends StatefulWidget {
-  @override
-  _ModuleItemsScreenState createState() => _ModuleItemsScreenState();
-}
-
-class _ModuleItemsScreenState extends State<ModuleItemsScreen> {
-  bool _itemsLoaded = false;
-
+class ModuleItemsScreen extends StatelessWidget {
   Widget getHeader(BuildContext context, StudyModule module) {
     return Card(
       child: Padding(
@@ -114,9 +107,15 @@ class _ModuleItemsScreenState extends State<ModuleItemsScreen> {
                 return ListView(
                   children: getItems(context, args.studyModule, state.items),
                 );
+              } else if (state is LoadingItems) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               } else {
-                return _buildModulesLoader(
-                    context, context.bloc(), args.studyModule.id);
+                context
+                    .bloc<ModuleBloc>()
+                    .add(FetchModuleItemsEvent(args.studyModule.id));
+                return Container();
               }
             },
           ),
@@ -126,27 +125,12 @@ class _ModuleItemsScreenState extends State<ModuleItemsScreen> {
         bloc: context.bloc(),
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.SUBJECTS, state.user);
+            return AppDrawer(Routes.SUBJECTS, state.user, state.batches);
           } else {
             return Text("Something went wrong.");
           }
         },
       ),
-    );
-  }
-
-  Widget _buildModulesLoader(
-      BuildContext context, ModuleBloc bloc, int moduleId) {
-    if (!_itemsLoaded) {
-      Future.delayed(Duration.zero, () {
-        this.setState(() {
-          _itemsLoaded = true;
-        });
-        bloc.add(FetchModuleItemsEvent(moduleId));
-      });
-    }
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 }

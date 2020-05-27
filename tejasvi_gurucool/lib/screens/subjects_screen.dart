@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/batch_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
@@ -9,14 +9,7 @@ import 'package:tejasvi_gurucool/screens/modules_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
-class SubjectsScreen extends StatefulWidget {
-  @override
-  _SubjectScreenState createState() => _SubjectScreenState();
-}
-
-class _SubjectScreenState extends State<SubjectsScreen> {
-  bool _subjectLoaded = false;
-
+class SubjectsScreen extends StatelessWidget {
   void onSubjectCardTap(BuildContext context, User user, Subject subject) {
     if (subject != null) {
       Future.delayed(
@@ -76,7 +69,7 @@ class _SubjectScreenState extends State<SubjectsScreen> {
       drawer: BlocBuilder<UserBloc, UserState>(
         builder: (BuildContext context, UserState state) {
           if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.SUBJECTS, state.user);
+            return AppDrawer(Routes.SUBJECTS, state.user, state.batches);
           } else {
             return Text("Something went wrong.");
           }
@@ -94,24 +87,15 @@ class _SubjectScreenState extends State<SubjectsScreen> {
             itemBuilder: (context, index) =>
                 _getSubjectCard(context, user, state.subjects[index]),
           );
+        } else if (state is LoadingSubjects) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         } else {
-          return _buildSubjectLoader(context, context.bloc(), user);
+          Future.delayed(Duration.zero, () => context.bloc<BatchBloc>().add(FetchSubjects(user.batches)));
+          return Container();
         }
       },
-    );
-  }
-
-  Widget _buildSubjectLoader(BuildContext context, BatchBloc bloc, User user) {
-    if (!_subjectLoaded) {
-      Future.delayed(Duration.zero, () {
-        this.setState(() {
-          _subjectLoaded = true;
-        });
-        bloc.add(FetchSubjects(user.batches));
-      });
-    }
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
