@@ -9,6 +9,7 @@ import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/repository/module_repository.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ModuleItemsScreenArgs {
   final StudyModule studyModule;
@@ -45,7 +46,14 @@ class ModuleItemsScreen extends StatelessWidget {
       return Icon(Icons.description, size: size);
   }
 
-  void onTapModuleItem(BuildContext context, ModuleItem item) {}
+  Future<void> onTapModuleItem(BuildContext context, ModuleItem item) async {
+    if (item.file.isVideo()) {
+      if (await canLaunch(item.file.path)) {
+        await launch(item.file.path,
+            enableJavaScript: true, forceWebView: true);
+      }
+    }
+  }
 
   List<Widget> getItems(BuildContext context, final StudyModule module,
       final List<ModuleItem> moduleItems) {
