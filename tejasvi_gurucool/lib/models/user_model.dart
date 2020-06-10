@@ -1,6 +1,6 @@
 class User {
-  int _id;
-  int get id => _id;
+  String _id;
+  String get id => _id;
 
   String _firstName;
   String get firstName => _firstName;
@@ -14,14 +14,11 @@ class User {
   DateTime _birthDate;
   DateTime get birthDate => _birthDate;
 
-  int _phoneNo;
-  int get phoneNo => _phoneNo;
+  String _phoneNo;
+  String get phoneNo => _phoneNo;
 
   bool _isMember;
   bool get isMember => _isMember;
-
-  String _username;
-  String get username => _username;
 
   String _email;
   String get email => _email;
@@ -35,8 +32,8 @@ class User {
   DateTime _updatedOn;
   DateTime get updatedOn => _updatedOn;
 
-  List<int> _batches;
-  List<int> get batches => _batches;
+  List<dynamic> _batches;
+  List<dynamic> get batches => _batches;
 
   String _token;
   String get token => _token;
@@ -80,33 +77,31 @@ class User {
   }
 
   User(
-      {int id,
+      {String id,
       String firstName,
       String lastName,
       String middleName,
       DateTime birthDate,
-      int phoneNo,
-      String username,
+      String phoneNo,
       String email,
       String password,
       DateTime createdOn,
       DateTime updatedOn,
       bool isMember,
       String token,
-      List<int> batches})
+      List<dynamic> batches})
       : _id = id,
         _firstName = firstName,
         _lastName = lastName,
         _middleName = middleName,
         _birthDate = birthDate,
         _phoneNo = phoneNo,
-        _username = username,
         _email = email,
         _password = password,
         _createdOn = createdOn,
         _updatedOn = updatedOn,
         _isMember = isMember,
         _token = token {
-    _batches = batches ?? <int>[];
+    _batches = batches ?? <dynamic>[];
   }
 }

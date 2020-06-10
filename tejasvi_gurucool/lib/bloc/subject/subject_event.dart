@@ -5,7 +5,7 @@ abstract class SubjectEvent extends Equatable {
 }
 
 class FetchModulesEvent extends SubjectEvent {
-  final int subjectId;
+  final String subjectId;
 
   FetchModulesEvent(this.subjectId);
 

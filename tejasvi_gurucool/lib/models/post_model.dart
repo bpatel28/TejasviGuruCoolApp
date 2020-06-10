@@ -1,8 +1,8 @@
 import 'package:tejasvi_gurucool/models/user_model.dart';
 
 class Post {
-  int _id;
-  int get id => _id;
+  String _id;
+  String get id => _id;
 
   String _text;
   String get text => _text;
@@ -13,7 +13,7 @@ class Post {
   User _sender;
   User get sender => _sender;
 
-  Post({int id = -1, String text = "", DateTime timestamp, User sender})
+  Post({String id = "-1", String text = "", DateTime timestamp, User sender})
       : _id = id,
         _text = text,
         _timestamp = timestamp,

@@ -5,7 +5,7 @@ abstract class ModuleEvent extends Equatable {
 }
 
 class FetchModuleItemsEvent extends ModuleEvent {
-  final int moduleId;
+  final String moduleId;
 
   FetchModuleItemsEvent(this.moduleId);
 

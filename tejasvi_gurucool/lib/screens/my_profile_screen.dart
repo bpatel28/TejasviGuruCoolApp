@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
@@ -158,7 +157,6 @@ class MyProfileScreen extends StatelessWidget {
           createUserInfoText("Birth Date: ", formatDate(user.birthDate)),
           createUserInfoText(
               "Phone No: ", formatPhoneNo(user.phoneNo.toString())),
-          createUserInfoText("Username: ", user.username),
           createUserInfoText("Email: ", user.email),
           createUserInfoText("Created On: ", formatDate(user.createdOn)),
           createUserInfoText("Updated On: ", formatDate(user.updatedOn)),

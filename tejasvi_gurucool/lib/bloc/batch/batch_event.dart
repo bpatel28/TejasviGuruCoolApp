@@ -10,7 +10,7 @@ class FetchBatches extends BatchEvent {
 }
 
 class FetchSubjects extends BatchEvent {
-  final List<int> batches;
+  final List<String> batches;
 
   FetchSubjects(this.batches);
 

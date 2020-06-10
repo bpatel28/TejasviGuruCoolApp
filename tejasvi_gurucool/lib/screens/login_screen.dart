@@ -61,7 +61,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
 
   bool _passwordVisible = false;
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   void _togglePasswordVisibility() {
@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
     });
   }
 
-  String _validateUsername(String username) {
+  String _validateEmail(String username) {
     if (username.isEmpty) {
       return "Username is empty";
     }
@@ -93,9 +93,9 @@ class _LoginFormState extends State<LoginForm> {
   void _onLoginButtonPressed(BuildContext context, UserBloc bloc) {
     if (!_formKey.currentState.validate()) return;
     try {
-      final String username = _usernameController.text;
-      final String password = _passwordController.text;
-      bloc.add(LoginUser(username: username, password: password));
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+      bloc.add(LoginUser(email: email, password: password));
     } on Exception catch (e) {
       print(e);
       showSnackBar(context, "Login Failed. Please try again");
@@ -119,7 +119,9 @@ class _LoginFormState extends State<LoginForm> {
           } else if (state is LoginLoading) {
             return _buildLoading(context);
           } else if (state is LoginFailed) {
-            showSnackBar(context, state.message);
+            Future.delayed(Duration.zero, () {
+              showSnackBar(context, state.message);
+            });
             return _buildLoginForm(context);
           } else {
             return _buildLoginForm(context);
@@ -135,10 +137,10 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            controller: _usernameController,
-            validator: _validateUsername,
+            controller: _emailController,
+            validator: _validateEmail,
             decoration: InputDecoration(
-              labelText: "Enter Username",
+              labelText: "Enter Email",
               border: OutlineInputBorder(),
             ),
           ),

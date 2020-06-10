@@ -8,7 +8,7 @@ class BatchRepository {
     return Mock.batches;
   }
 
-  Future<List<Subject>> getSubjects(final List<int> batches) async {
+  Future<List<Subject>> getSubjects(final List<String> batches) async {
     await Future.delayed(Duration(seconds: 2));
     return Mock.subjects;
   }

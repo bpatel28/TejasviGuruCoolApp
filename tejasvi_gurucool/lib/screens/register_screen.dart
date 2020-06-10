@@ -49,7 +49,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final _lastNameController = TextEditingController();
   final _middleNameController = TextEditingController();
   final _phoneNoController = TextEditingController();
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _birthDateController = TextEditingController();
@@ -91,7 +90,7 @@ class _RegisterFormState extends State<RegisterForm> {
     return null;
   }
 
-  String _validateUsername(String value) {
+  String _validateEmail(String value) {
     if (value.isEmpty) {
       return "User name can not be empty.";
     }
@@ -123,11 +122,10 @@ class _RegisterFormState extends State<RegisterForm> {
       final String middleName = _middleNameController.text;
       final int phoneNo = int.tryParse(_phoneNoController.text);
       final DateTime birthDate = DateTime.tryParse(_birthDateController.text);
-      final String username = _usernameController.text;
       final String email = _emailController.text;
       final String password = _passwordController.text;
       bloc.add(RegisterUser(
-        batches: <int>[batch.id],
+        batches: <String>[batch.id],
         birthDate: birthDate,
         email: email,
         firstName: firstName,
@@ -135,7 +133,6 @@ class _RegisterFormState extends State<RegisterForm> {
         middleName: middleName,
         password: password,
         phoneNo: phoneNo,
-        username: username,
       ));
     } on Exception catch (e) {
       print(e);
@@ -168,7 +165,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget _buildBatchesDropDown(List<Batch> batches) {
     return DropdownButton(
       icon: Icon(Icons.arrow_downward),
-      value: batch?.id ?? null,
+      value: batch?.id ?? "",
       hint: Text("Selct Batch"),
       iconSize: 24,
       elevation: 16,
@@ -178,13 +175,13 @@ class _RegisterFormState extends State<RegisterForm> {
         height: 2.0,
         color: Colors.deepPurpleAccent,
       ),
-      onChanged: (int newValue) {
+      onChanged: (String newValue) {
         setState(() {
           batch =
               batches.where((item) => item.id == newValue).first ?? null;
         });
       },
-      items: batches.map<DropdownMenuItem<int>>((Batch batch) {
+      items: batches.map<DropdownMenuItem<String>>((Batch batch) {
         return DropdownMenuItem(value: batch.id, child: Text(batch.name));
       }).toList(),
     );
@@ -252,17 +249,12 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(
             height: 10,
           ),
-          TextFormField(
-            controller: _usernameController,
-            validator: _validateUsername,
-            decoration: InputDecoration(
-                labelText: "Enter Username", border: OutlineInputBorder()),
-          ),
           SizedBox(
             height: 10,
           ),
           TextFormField(
             controller: _emailController,
+            validator: _validateEmail,
             decoration: InputDecoration(
                 labelText: "Enter Email", border: OutlineInputBorder()),
             keyboardType: TextInputType.emailAddress,

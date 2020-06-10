@@ -5,16 +5,21 @@ abstract class UserEvent extends Equatable {
 }
 
 class LoginUser extends UserEvent {
-  final String username;
+  final String email;
   final String password;
 
   LoginUser({
-    @required this.username,
+    @required this.email,
     @required this.password,
   });
 
   @override
-  List<Object> get props => [username, password];
+  List<Object> get props => [email, password];
+}
+
+class LogOut extends UserEvent {
+  @override
+  List<Object> get props => [];
 }
 
 class RegisterUser extends UserEvent {
@@ -25,8 +30,7 @@ class RegisterUser extends UserEvent {
   final String middleName;
   final DateTime birthDate;
   final int phoneNo;
-  final String username;
-  final List<int> batches;
+  final List<String> batches;
 
   RegisterUser(
       {@required this.firstName,
@@ -34,20 +38,11 @@ class RegisterUser extends UserEvent {
       @required this.middleName,
       @required this.birthDate,
       @required this.phoneNo,
-      @required this.username,
       @required this.email,
       @required this.password,
       @required this.batches});
 
   @override
-  List<Object> get props => [
-        firstName,
-        lastName,
-        middleName,
-        username,
-        birthDate,
-        batches,
-        email,
-        password
-      ];
+  List<Object> get props =>
+      [firstName, lastName, middleName, birthDate, batches, email, password];
 }

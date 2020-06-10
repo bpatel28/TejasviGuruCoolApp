@@ -6,8 +6,8 @@ class FileType {
 
 
 class ModuleFile {
-  int _id;
-  int get id => _id;
+  String _id;
+  String get id => _id;
 
   String _name;
   String get name => _name;
@@ -24,7 +24,7 @@ class ModuleFile {
   
   bool isPDF() => FileType.PDF_FILE == _type;
 
-  ModuleFile({int id, String name, String path, String type})
+  ModuleFile({String id, String name, String path, String type})
       : _id = id,
         _name = name,
         _path = path,
