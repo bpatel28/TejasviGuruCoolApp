@@ -1,9 +1,8 @@
-import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/post_model.dart';
 
 class ModuleItem {
-  String _id;
-  String get id => _id;
+  int _id;
+  int get id => _id;
 
   String _title;
   String get title => _title;
@@ -11,22 +10,44 @@ class ModuleItem {
   String _description;
   String get description => _description;
 
-  ModuleFile _file;
-  ModuleFile get file => _file;
+  String _fileName;
+  String get fileName => _fileName;
 
-  List<dynamic> _posts;
-  List<dynamic> get posts => _posts;
+  String _fileType;
+  String get fileType => _fileType;
 
-  ModuleItem(
-      {String id = "-1",
-      String title = "",
-      String description = "",
-      ModuleFile file,
-      List<dynamic> posts})
-      : _id = id,
+  String _filePath;
+  String get filePath => _filePath;
+
+  List<Post> _posts;
+  List<Post> get posts => _posts;
+
+  bool isImage() {
+    return fileType.toUpperCase().contains("IMAGE");
+  }
+
+  bool isVideo() {
+    return fileType.toLowerCase().contains("VIDEO");
+  }
+
+  bool isPDF() {
+    return fileType.toLowerCase().contains("PDF");
+  }
+
+  ModuleItem({
+    int id = -1,
+    String title = "",
+    String description = "",
+    String fileName = "",
+    String fileType = "",
+    String filePath = "",
+    List<Post> posts,
+  })  : _id = id,
         _title = title,
         _description = description,
-        _file = file {
-    _posts = posts ?? <dynamic>[];
+        _fileName = fileName,
+        _fileType = fileType,
+        _filePath = filePath {
+    _posts = posts ?? <Post>[];
   }
 }

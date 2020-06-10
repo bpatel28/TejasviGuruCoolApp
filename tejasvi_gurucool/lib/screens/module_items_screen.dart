@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/module/module_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
-import 'package:tejasvi_gurucool/models/file_model.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/study_module_model.dart';
 import 'package:tejasvi_gurucool/repository/module_repository.dart';
@@ -35,21 +34,20 @@ class ModuleItemsScreen extends StatelessWidget {
   }
 
   Icon getIcon(ModuleItem item, double size) {
-    final ModuleFile file = item.file;
-    if (file != null && file.isImage())
+    if (item != null && item.isImage())
       return Icon(Icons.image, size: size);
-    else if (file != null && file.isVideo())
+    else if (item != null && item.isVideo())
       return Icon(Icons.video_library, size: size);
-    else if (file != null && file.isPDF())
+    else if (item != null && item.isPDF())
       return Icon(Icons.assignment, size: size);
     else
       return Icon(Icons.description, size: size);
   }
 
   Future<void> onTapModuleItem(BuildContext context, ModuleItem item) async {
-    if (item.file.isVideo()) {
-      if (await canLaunch(item.file.path)) {
-        await launch(item.file.path,
+    if (item.isVideo()) {
+      if (await canLaunch(item.filePath)) {
+        await launch(item.filePath,
             enableJavaScript: true, forceWebView: true);
       }
     }

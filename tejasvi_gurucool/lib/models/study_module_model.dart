@@ -1,6 +1,8 @@
+import 'package:tejasvi_gurucool/models/module_item.dart';
+
 class StudyModule {
-  String _id;
-  String get id => _id;
+  int _id;
+  int get id => _id;
 
   String _title;
   String get title => _title;
@@ -11,19 +13,19 @@ class StudyModule {
   String _longDescription;
   String get longDescription => _longDescription;
 
-  List<dynamic> _items = <String>[];
-  List<dynamic> get items => _items;
+  List<ModuleItem> _items;
+  List<ModuleItem> get items => _items;
 
   StudyModule(
-      {String id = "-1",
+      {int id = -1,
       String title = "",
       String shortDescription = "",
       String longDescription = "",
-      List<dynamic> items})
+      List<ModuleItem> items})
       : _id = id,
         _title = title,
         _shortDescription = shortDescription,
         _longDescription = longDescription {
-    _items = items ?? <dynamic>[];
+    _items = items ?? <ModuleItem>[];
   }
 }

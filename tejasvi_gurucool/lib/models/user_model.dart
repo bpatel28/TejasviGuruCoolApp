@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   String _id;
   String get id => _id;
@@ -32,8 +34,8 @@ class User {
   DateTime _updatedOn;
   DateTime get updatedOn => _updatedOn;
 
-  List<dynamic> _batches;
-  List<dynamic> get batches => _batches;
+  List<DocumentReference> _batches;
+  List<DocumentReference> get batches => _batches;
 
   String _token;
   String get token => _token;
@@ -89,7 +91,7 @@ class User {
       DateTime updatedOn,
       bool isMember,
       String token,
-      List<dynamic> batches})
+      List<DocumentReference> batches})
       : _id = id,
         _firstName = firstName,
         _lastName = lastName,
@@ -102,6 +104,6 @@ class User {
         _updatedOn = updatedOn,
         _isMember = isMember,
         _token = token {
-    _batches = batches ?? <dynamic>[];
+    _batches = batches ?? <DocumentReference>[];
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tejasvi_gurucool/mock_data.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
@@ -8,7 +9,7 @@ class BatchRepository {
     return Mock.batches;
   }
 
-  Future<List<Subject>> getSubjects(final List<String> batches) async {
+  Future<List<Subject>> getSubjects(final List<DocumentReference> batches) async {
     await Future.delayed(Duration(seconds: 2));
     return Mock.subjects;
   }
