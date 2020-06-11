@@ -22,11 +22,11 @@ class ModuleItem {
   }
 
   bool isVideo() {
-    return fileType.toLowerCase().contains("VIDEO");
+    return fileType.toUpperCase().contains("VIDEO");
   }
 
   bool isPDF() {
-    return fileType.toLowerCase().contains("PDF");
+    return fileType.toUpperCase().contains("PDF");
   }
 
   ModuleItem({

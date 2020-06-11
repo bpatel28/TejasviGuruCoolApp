@@ -10,7 +10,7 @@ import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class SubjectsScreen extends StatelessWidget {
-  void onSubjectCardTap(BuildContext context, User user, Subject subject) {
+  void onSubjectCardTap(BuildContext context, subject) {
     if (subject != null) {
       Future.delayed(
           Duration.zero,
@@ -19,11 +19,11 @@ class SubjectsScreen extends StatelessWidget {
     }
   }
 
-  Widget _getSubjectCard(BuildContext context, User user, Subject subject) {
+  Widget _getSubjectCard(BuildContext context, Subject subject) {
     return Card(
       child: InkWell(
         splashColor: Theme.of(context).accentColor,
-        onTap: () => onSubjectCardTap(context, user, subject),
+        onTap: () => onSubjectCardTap(context, subject),
         child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Column(
@@ -77,7 +77,7 @@ class SubjectsScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: state.subjects.length,
             itemBuilder: (context, index) =>
-                _getSubjectCard(context, user, state.subjects[index]),
+                _getSubjectCard(context, state.subjects[index]),
           );
         } else if (state is LoadingSubjects) {
           return Center(

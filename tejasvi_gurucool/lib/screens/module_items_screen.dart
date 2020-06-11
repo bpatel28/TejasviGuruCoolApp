@@ -97,31 +97,12 @@ class ModuleItemsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(args.subject.name),
       ),
-      body: Text("Modules"),
-      // body: BlocProvider(
-      //   create: (BuildContext context) => ModuleBloc(ModuleRepository()),
-      //   child: Container(
-      //     padding: EdgeInsets.all(10.0),
-      //     child: BlocBuilder<ModuleBloc, ModuleState>(
-      //       builder: (context, state) {
-      //         if (state is ItemsLoaded) {
-      //           return ListView(
-      //             children: getItems(context, args.studyModule, state.items),
-      //           );
-      //         } else if (state is LoadingItems) {
-      //           return Center(
-      //             child: CircularProgressIndicator(),
-      //           );
-      //         } else {
-      //           context
-      //               .bloc<ModuleBloc>()
-      //               .add(FetchModuleItemsEvent(args.studyModule.id));
-      //           return Container();
-      //         }
-      //       },
-      //     ),
-      //   ),
-      // ),
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: ListView(
+          children: getItems(context, args.subject),
+        ),
+      ),
       drawer: AppDrawer(Routes.SUBJECTS),
     );
   }
