@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:tejasvi_gurucool/mock_data.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,12 +25,12 @@ class UserRepository {
           await _firestore.collection("users").document(firebaseUser.uid).get();
 
       final String firstName = doc.data['firstName'];
-      final String lastName = doc.data['firstName'];
-      final String middleName = doc.data['firstName'];
+      final String lastName = doc.data['lastName'];
+      final String middleName = doc.data['middleName'];
       final String userEmail = firebaseUser.email;
       final String phoneNo = doc.data['phoneNo'];
       final bool isMember = doc.data['isMember'];
-      final List<DocumentReference> batches = doc.data['batches'];
+      final List<String> batches = new List<String>.from(doc.data['batches']);
       final Timestamp birthDate = doc.data['birthDate'];
       final Timestamp createdOn = doc.data['createdOn'];
       final Timestamp updatedOn = doc.data['updatedOn'];
@@ -50,21 +49,42 @@ class UserRepository {
         updatedOn: updatedOn.toDate(),
       );
     } on Exception catch (e) {
+      print(e);
       throw new Exception("Login Failed");
     }
   }
 
-  Future<User> registerUser(
-      {@required String firstName,
-      @required String lastName,
-      @required String middleName,
-      @required DateTime birthDate,
-      @required int phoneNo,
-      @required String email,
-      @required String password,
-      @required List<String> batches}) async {
-    await Future.delayed(Duration(seconds: 1));
-    return Mock.user;
+  Future<User> registerUser({
+    @required String firstName,
+    @required String lastName,
+    @required String middleName,
+    @required DateTime birthDate,
+    @required String phoneNo,
+    @required String email,
+    @required String password,
+    @required List<String> batches,
+  }) async {
+    try {
+      final firebaseUser = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      await _firestore.collection("users").document(firebaseUser.uid).setData({
+        'firstName': firstName,
+        'lastName': lastName,
+        'middleName': middleName,
+        'phoneNo': phoneNo.toString(),
+        'isMember': false,
+        'batches': batches,
+        'birthDate': birthDate,
+        'createdOn': new DateTime.now(),
+        'updatedOn': new DateTime.now(),
+      });
+
+      return await signInWithCredentials(email: email, password: password);
+    } on Exception catch (e) {
+      print(e);
+      throw new Exception("Registraion Failed. Please try again");
+    }
   }
 
   Future<void> signOut() async {

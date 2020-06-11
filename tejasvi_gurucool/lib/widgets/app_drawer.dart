@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 class AppDrawer extends StatelessWidget {
-  final User _user;
   final String _selectedRoute;
-  final List<Batch> _batches;
 
-  AppDrawer(this._selectedRoute, this._user, this._batches);
+  AppDrawer(this._selectedRoute);
 
-  List<Batch> getUserBatches() {
-    if (_user.batches.length == 0 || (_batches != null && _batches.length == 0))
+  List<Batch> filterUserBatches(final User user, final List<Batch> batches) {
+    if (user.batches.length == 0 || (batches != null && batches.length == 0))
       return <Batch>[];
 
     List<Batch> userBatches = <Batch>[];
 
-    _user.batches.forEach((userBatchItemId) {
-      _batches.forEach((batchItem) {
-        if (batchItem.id == userBatchItemId) {
+    user.batches.forEach((batchId) {
+      batches.forEach((batchItem) {
+        if (batchItem.id == batchId) {
           userBatches.add(batchItem);
         }
       });
@@ -28,16 +29,17 @@ class AppDrawer extends StatelessWidget {
     return userBatches;
   }
 
-  Widget _createHeader(BuildContext context) {
+  Widget _createHeader(
+      BuildContext context, final User user, final List<Batch> batches) {
     List<Widget> headerWidgets = <Widget>[];
     headerWidgets.add(
       Text(
-        _user.getName(),
+        user.getName(),
         style: TextStyle(
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w500),
       ),
     );
-    final userBatches = getUserBatches();
+    final userBatches = filterUserBatches(user, batches);
     for (int i = 0; i < userBatches.length; ++i) {
       headerWidgets.add(Text(
         userBatches[i].name,
@@ -53,7 +55,7 @@ class AppDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             CircularBox(
-              _user.getInitials(),
+              user.getInitials(),
               padding: EdgeInsets.all(12.0),
               color: Colors.red,
               textColor: Colors.white,
@@ -105,26 +107,57 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        _createHeader(context),
-        _createDrawerItem(context,
-            icon: Icons.subject,
-            text: "Subjects",
-            onTap: () => _changeRoute(context, Routes.SUBJECTS),
-            selected: _selectedRoute == Routes.SUBJECTS),
-        _createDrawerItem(context,
-            icon: Icons.people,
-            text: "My Profile",
-            onTap: () => _changeRoute(context, Routes.MY_PROFILE),
-            selected: _selectedRoute == Routes.MY_PROFILE),
-        _createDrawerItem(context,
-            icon: Icons.info,
-            text: "About Us",
-            onTap: () => _changeRoute(context, Routes.ABOUT_US),
-            selected: _selectedRoute == Routes.ABOUT_US)
-      ],
-    ));
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          // _createHeader(context),
+          BlocBuilder<UserBloc, UserState>(
+            bloc: context.bloc<UserBloc>(),
+            builder: (BuildContext userBlocContext, UserState userState) {
+              if (userState is AuthenticatedUser) {
+                return BlocBuilder(
+                  bloc: context.bloc<BatchBloc>(),
+                  builder:
+                      (BuildContext batchBlocContext, BatchState batchState) {
+                    if (batchState is BatchInitial) {
+                      Future.delayed(Duration.zero, () {
+                        context.bloc<BatchBloc>().add(FetchBatches());
+                      });
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (batchState is AllBatchLoaded) {
+                      return _createHeader(
+                          context, userState.user, batchState.batches);
+                    } else {
+                      return Text("");
+                    }
+                  },
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+          _createDrawerItem(context,
+              icon: Icons.subject,
+              text: "Subjects",
+              onTap: () => _changeRoute(context, Routes.SUBJECTS),
+              selected: _selectedRoute == Routes.SUBJECTS),
+          _createDrawerItem(context,
+              icon: Icons.people,
+              text: "My Profile",
+              onTap: () => _changeRoute(context, Routes.MY_PROFILE),
+              selected: _selectedRoute == Routes.MY_PROFILE),
+          _createDrawerItem(context,
+              icon: Icons.info,
+              text: "About Us",
+              onTap: () => _changeRoute(context, Routes.ABOUT_US),
+              selected: _selectedRoute == Routes.ABOUT_US)
+        ],
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
@@ -49,13 +50,14 @@ class MyProfileScreen extends StatelessWidget {
   }
 
   Widget getUserBatchesWidget(User user, List<Batch> batches) {
-    if (user.batches.length == 0 || (batches != null && batches.length == 0)) return Container();
+    if (user.batches.length == 0 || (batches != null && batches.length == 0))
+      return Container();
 
     List<Batch> userBatches = <Batch>[];
 
-    user.batches.forEach((userBatchItemId) {
+    user.batches.forEach((batchRef) {
       batches.forEach((batchItem) {
-        if (batchItem.id == userBatchItemId) {
+        if (batchItem.id == batchRef) {
           userBatches.add(batchItem);
         }
       });
@@ -115,30 +117,32 @@ class MyProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("My Profile"),
       ),
-      body: BlocBuilder<UserBloc, UserState>(
+      body: BlocBuilder<BatchBloc, BatchState>(
         bloc: context.bloc(),
-        builder: (BuildContext context, UserState state) {
-          if (state is AuthenticatedUser) {
-            return _buildMyProfileInfo(context, state.user, state.batches);
+        builder: (BuildContext batchBlocContext, BatchState batchState) {
+          if (batchState is AllBatchLoaded) {
+            return BlocBuilder<UserBloc, UserState>(
+              bloc: context.bloc(),
+              builder: (BuildContext context, UserState userState) {
+                if (userState is AuthenticatedUser) {
+                  return _buildMyProfileInfo(
+                      context, userState.user, batchState.batches);
+                } else {
+                  return Text("Something went wrong.");
+                }
+              },
+            );
           } else {
-            return Text("Something went wrong.");
+            return Text("Loading");
           }
         },
       ),
-      drawer: BlocBuilder<UserBloc, UserState>(
-        bloc: context.bloc(),
-        builder: (BuildContext context, UserState state) {
-          if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.MY_PROFILE, state.user, state.batches);
-          } else {
-            return Text("Something went wrong.");
-          }
-        },
-      ),
+      drawer: AppDrawer(Routes.MY_PROFILE),
     );
   }
 
-  Widget _buildMyProfileInfo(BuildContext context, User user, List<Batch> batches) {
+  Widget _buildMyProfileInfo(
+      BuildContext context, User user, List<Batch> batches) {
     return Center(
       child: ListView(
         children: <Widget>[

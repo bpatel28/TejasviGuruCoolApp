@@ -1,30 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/module/module_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
-import 'package:tejasvi_gurucool/models/study_module_model.dart';
-import 'package:tejasvi_gurucool/repository/module_repository.dart';
+import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ModuleItemsScreenArgs {
-  final StudyModule studyModule;
+  final Subject subject;
 
-  ModuleItemsScreenArgs(this.studyModule);
+  ModuleItemsScreenArgs(this.subject);
 }
 
 class ModuleItemsScreen extends StatelessWidget {
-  Widget getHeader(BuildContext context, StudyModule module) {
+  Widget getHeader(BuildContext context, Subject subject) {
     return Card(
       child: Padding(
         padding: EdgeInsets.all(10),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           child: Text(
-            module.longDescription,
+            subject.description,
             textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -47,20 +43,18 @@ class ModuleItemsScreen extends StatelessWidget {
   Future<void> onTapModuleItem(BuildContext context, ModuleItem item) async {
     if (item.isVideo()) {
       if (await canLaunch(item.filePath)) {
-        await launch(item.filePath,
-            enableJavaScript: true, forceWebView: true);
+        await launch(item.filePath, enableJavaScript: true, forceWebView: true);
       }
     }
   }
 
-  List<Widget> getItems(BuildContext context, final StudyModule module,
-      final List<ModuleItem> moduleItems) {
+  List<Widget> getItems(BuildContext context, final Subject subject) {
     List<Widget> items = <Widget>[];
 
-    items.add(getHeader(context, module));
+    items.add(getHeader(context, subject));
 
-    for (int i = 0; i < moduleItems.length; ++i) {
-      final ModuleItem item = moduleItems[i];
+    for (int i = 0; i < subject.modules.length; ++i) {
+      final ModuleItem item = subject.modules[i];
       if (item != null) {
         items.add(Card(
           child: InkWell(
@@ -78,7 +72,7 @@ class ModuleItemsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          item.title,
+                          item.name,
                           style: TextStyle(fontSize: 15.0),
                         ),
                         Text(item.description,
@@ -101,42 +95,34 @@ class ModuleItemsScreen extends StatelessWidget {
         ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.studyModule.title),
+        title: Text(args.subject.name),
       ),
-      body: BlocProvider(
-        create: (BuildContext context) => ModuleBloc(ModuleRepository()),
-        child: Container(
-          padding: EdgeInsets.all(10.0),
-          child: BlocBuilder<ModuleBloc, ModuleState>(
-            builder: (context, state) {
-              if (state is ItemsLoaded) {
-                return ListView(
-                  children: getItems(context, args.studyModule, state.items),
-                );
-              } else if (state is LoadingItems) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                context
-                    .bloc<ModuleBloc>()
-                    .add(FetchModuleItemsEvent(args.studyModule.id));
-                return Container();
-              }
-            },
-          ),
-        ),
-      ),
-      drawer: BlocBuilder<UserBloc, UserState>(
-        bloc: context.bloc(),
-        builder: (BuildContext context, UserState state) {
-          if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.SUBJECTS, state.user, state.batches);
-          } else {
-            return Text("Something went wrong.");
-          }
-        },
-      ),
+      body: Text("Modules"),
+      // body: BlocProvider(
+      //   create: (BuildContext context) => ModuleBloc(ModuleRepository()),
+      //   child: Container(
+      //     padding: EdgeInsets.all(10.0),
+      //     child: BlocBuilder<ModuleBloc, ModuleState>(
+      //       builder: (context, state) {
+      //         if (state is ItemsLoaded) {
+      //           return ListView(
+      //             children: getItems(context, args.studyModule, state.items),
+      //           );
+      //         } else if (state is LoadingItems) {
+      //           return Center(
+      //             child: CircularProgressIndicator(),
+      //           );
+      //         } else {
+      //           context
+      //               .bloc<ModuleBloc>()
+      //               .add(FetchModuleItemsEvent(args.studyModule.id));
+      //           return Container();
+      //         }
+      //       },
+      //     ),
+      //   ),
+      // ),
+      drawer: AppDrawer(Routes.SUBJECTS),
     );
   }
 }

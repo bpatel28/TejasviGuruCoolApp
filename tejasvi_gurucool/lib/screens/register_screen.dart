@@ -120,7 +120,7 @@ class _RegisterFormState extends State<RegisterForm> {
       final String firstName = _firstNameController.text;
       final String lastName = _lastNameController.text;
       final String middleName = _middleNameController.text;
-      final int phoneNo = int.tryParse(_phoneNoController.text);
+      final String phoneNo = _phoneNoController.text;
       final DateTime birthDate = DateTime.tryParse(_birthDateController.text);
       final String email = _emailController.text;
       final String password = _passwordController.text;
@@ -136,7 +136,7 @@ class _RegisterFormState extends State<RegisterForm> {
       ));
     } on Exception catch (e) {
       print(e);
-      showSnackBar(context, "Login Failed. Please try again");
+      showSnackBar(context, "Registraion Failed. Please try again");
     }
   }
 
@@ -153,7 +153,9 @@ class _RegisterFormState extends State<RegisterForm> {
         } else if (state is RegisterLoading) {
           return _buildLoading(context);
         } else if (state is RegistrationFailed) {
-          showSnackBar(context, state.message);
+          Future.delayed(Duration.zero, () {
+            showSnackBar(context, state.message);
+          });
           return _buildRegistrationForm();
         } else {
           return _buildRegistrationForm();
@@ -165,7 +167,7 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget _buildBatchesDropDown(List<Batch> batches) {
     return DropdownButton(
       icon: Icon(Icons.arrow_downward),
-      value: batch?.id ?? "",
+      value: batch?.id,
       hint: Text("Selct Batch"),
       iconSize: 24,
       elevation: 16,
@@ -177,8 +179,7 @@ class _RegisterFormState extends State<RegisterForm> {
       ),
       onChanged: (String newValue) {
         setState(() {
-          batch =
-              batches.where((item) => item.id == newValue).first ?? null;
+          batch = batches.where((item) => item.id == newValue).first ?? null;
         });
       },
       items: batches.map<DropdownMenuItem<String>>((Batch batch) {
@@ -189,7 +190,9 @@ class _RegisterFormState extends State<RegisterForm> {
 
   Widget _buildLoadingBatches(BuildContext context, BatchBloc bloc) {
     if (!_batchLoaded) {
-      _batchLoaded = true;
+      Future.delayed(Duration.zero, () {
+        _batchLoaded = true;
+      });
       bloc.add(FetchBatches());
     }
     return Center(

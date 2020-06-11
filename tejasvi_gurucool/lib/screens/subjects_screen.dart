@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/models/user_model.dart';
-import 'package:tejasvi_gurucool/screens/modules_screen.dart';
+import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
@@ -14,8 +14,8 @@ class SubjectsScreen extends StatelessWidget {
     if (subject != null) {
       Future.delayed(
           Duration.zero,
-          () => Navigator.pushNamed(context, Routes.MODULES,
-              arguments: ModulesScreenArgs(user, subject)));
+          () => Navigator.pushNamed(context, Routes.MODULE_ITEMS,
+              arguments: ModuleItemsScreenArgs(subject)));
     }
   }
 
@@ -66,21 +66,13 @@ class SubjectsScreen extends StatelessWidget {
           },
         ),
       ),
-      drawer: BlocBuilder<UserBloc, UserState>(
-        builder: (BuildContext context, UserState state) {
-          if (state is AuthenticatedUser) {
-            return AppDrawer(Routes.SUBJECTS, state.user, state.batches);
-          } else {
-            return Text("Something went wrong.");
-          }
-        },
-      ),
+      drawer: AppDrawer(Routes.SUBJECTS),
     );
   }
 
   Widget _buildSubjectsList(BuildContext context, User user) {
-    return BlocBuilder<BatchBloc, BatchState>(
-      builder: (BuildContext context, BatchState state) {
+    return BlocBuilder<SubjectBloc, SubjectState>(
+      builder: (BuildContext context, SubjectState state) {
         if (state is SubjectsLoaded) {
           return ListView.builder(
             itemCount: state.subjects.length,
@@ -92,7 +84,8 @@ class SubjectsScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          Future.delayed(Duration.zero, () => context.bloc<BatchBloc>().add(FetchSubjects(user.batches)));
+          Future.delayed(Duration.zero,
+              () => context.bloc<SubjectBloc>().add(FetchSubjects(user.batches)));
           return Container();
         }
       },

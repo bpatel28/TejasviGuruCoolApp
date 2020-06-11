@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tejasvi_gurucool/models/announcement_model.dart';
 
 class Batch {
@@ -11,17 +10,17 @@ class Batch {
   List<Announcement> _announcements = <Announcement>[];
   List<Announcement> get announcements => _announcements;
 
-  List<DocumentReference> _subjects;
-  List<DocumentReference> get subjects => _subjects;
+  List<String> _subjects;
+  List<String> get subjects => _subjects;
 
   Batch(
       {String id,
       String name,
       List<Announcement> announcements,
-      List<dynamic> subjects})
+      List<String> subjects})
       : _id = id,
         _name = name {
     _announcements = announcements ?? <Announcement>[];
-    _subjects = subjects ?? <dynamic>[];
+    _subjects = subjects ?? <String>[];
   }
 }

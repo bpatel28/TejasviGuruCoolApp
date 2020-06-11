@@ -8,12 +8,3 @@ class FetchBatches extends BatchEvent {
   @override
   List<Object> get props => [];
 }
-
-class FetchSubjects extends BatchEvent {
-  final List<DocumentReference> batches;
-
-  FetchSubjects(this.batches);
-
-   @override
-  List<Object> get props => [batches];
-}

@@ -1,4 +1,4 @@
-import 'package:tejasvi_gurucool/models/study_module_model.dart';
+import 'package:tejasvi_gurucool/models/module_item.dart';
 
 class Subject {
   String _id;
@@ -10,17 +10,17 @@ class Subject {
   String _description;
   String get description => _description;
 
-  List<StudyModule> _modules;
-  List<StudyModule> get modules => _modules;
+  List<ModuleItem> _modules;
+  List<ModuleItem> get modules => _modules;
 
   Subject({
     String id = "-1",
     String name = "",
     String description = "",
-    List<StudyModule> modules,
+    List<ModuleItem> modules,
   })  : _id = id,
         _name = name,
         _description = description {
-    _modules = modules ?? <StudyModule>[];
+    _modules = modules ?? <ModuleItem>[];
   }
 }

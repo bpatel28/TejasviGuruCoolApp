@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
-import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/repository/batch_repository.dart';
 
 part 'batch_event.dart';
@@ -28,14 +26,6 @@ class BatchBloc extends Bloc<BatchEvent, BatchState> {
       final List<Batch> batches = await _batchRepository.getAllBatches();
 
       yield AllBatchLoaded(batches);
-    }
-
-    if (event is FetchSubjects) {
-      yield LoadingSubjects();
-
-      final List<Subject> subjects = await _batchRepository.getSubjects(event.batches);
-
-      yield SubjectsLoaded(subjects);
     }
   }
 }

@@ -4,11 +4,11 @@ abstract class SubjectEvent extends Equatable {
   const SubjectEvent();
 }
 
-class FetchModulesEvent extends SubjectEvent {
-  final String subjectId;
+class FetchSubjects extends SubjectEvent {
+  final List<String> batches;
 
-  FetchModulesEvent(this.subjectId);
+  FetchSubjects(this.batches);
 
    @override
-  List<Object> get props => [subjectId];
+  List<Object> get props => [batches];
 }

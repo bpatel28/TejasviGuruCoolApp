@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/repository/batch_repository.dart';
+import 'package:tejasvi_gurucool/repository/subject_repository.dart';
 import 'package:tejasvi_gurucool/repository/user_repository.dart';
 import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
-import 'package:tejasvi_gurucool/screens/modules_screen.dart';
 import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
 import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
@@ -24,11 +25,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserBloc>(
-          create: (BuildContext context) => UserBloc(UserRepository(), BatchRepository()),
+          create: (BuildContext context) => UserBloc(UserRepository()),
         ),
         BlocProvider<BatchBloc>(
           create: (BuildContext context) => BatchBloc(BatchRepository()),
         ),
+        BlocProvider<SubjectBloc>(
+          create: (BuildContext context) => SubjectBloc(SubjectRepository()),
+        )
       ],
       child: MaterialApp(
         title: 'Tejasvi GuruCool',
@@ -43,7 +47,6 @@ class MyApp extends StatelessWidget {
         routes: {
           Routes.LOGIN: (context) => LoginScreen(),
           Routes.REGISTER: (context) => RegisterScreen(),
-          Routes.MODULES: (context) => ModulesScreen(),
           Routes.MODULE_ITEMS: (context) => ModuleItemsScreen(),
           Routes.MY_PROFILE: (context) => MyProfileScreen(),
           Routes.ABOUT_US: (context) => AboutUsScreen(),

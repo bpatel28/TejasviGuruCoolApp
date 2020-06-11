@@ -29,7 +29,7 @@ class RegisterUser extends UserEvent {
   final String lastName;
   final String middleName;
   final DateTime birthDate;
-  final int phoneNo;
+  final String phoneNo;
   final List<String> batches;
 
   RegisterUser(
@@ -44,5 +44,5 @@ class RegisterUser extends UserEvent {
 
   @override
   List<Object> get props =>
-      [firstName, lastName, middleName, birthDate, batches, email, password];
+      [firstName, lastName, middleName, birthDate, batches, email, password, phoneNo];
 }

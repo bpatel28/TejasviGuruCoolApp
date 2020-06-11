@@ -9,16 +9,19 @@ class SubjectInitial extends SubjectState {
   List<Object> get props => [];
 }
 
-class LoadingModules extends SubjectState {
+
+class LoadingSubjects extends SubjectState {
+
   @override
   List<Object> get props => [];
 }
 
-class ModulesLoaded extends SubjectState {
-  final List<StudyModule> modules;
+class SubjectsLoaded extends SubjectState {
 
-  ModulesLoaded(this.modules);
+  final List<Subject> subjects;
+
+  SubjectsLoaded(this.subjects);
 
   @override
-  List<Object> get props => [modules];
+  List<Object> get props => [subjects];
 }
