@@ -32,17 +32,26 @@ class RegisterUser extends UserEvent {
   final String phoneNo;
   final List<String> batches;
 
-  RegisterUser(
-      {@required this.firstName,
-      @required this.lastName,
-      @required this.middleName,
-      @required this.birthDate,
-      @required this.phoneNo,
-      @required this.email,
-      @required this.password,
-      @required this.batches});
+  RegisterUser({
+    @required this.firstName,
+    @required this.lastName,
+    @required this.middleName,
+    @required this.birthDate,
+    @required this.phoneNo,
+    @required this.email,
+    @required this.password,
+    @required this.batches,
+  });
 
   @override
-  List<Object> get props =>
-      [firstName, lastName, middleName, birthDate, batches, email, password, phoneNo];
+  List<Object> get props => [
+        firstName,
+        lastName,
+        middleName,
+        birthDate,
+        batches,
+        email,
+        password,
+        phoneNo,
+      ];
 }

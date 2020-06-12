@@ -15,8 +15,8 @@ class BatchRepository {
     final List<Batch> batches = <Batch>[];
 
     docs.forEach((doc) {
-      final name = doc.data["name"];
-      final subjects = new List<String>.from(doc.data["subjects"]);
+      final name = doc.data["name"] ?? "";
+      final subjects = new List<String>.from(doc.data["subjects"]) ?? <String>[];
       batches
           .add(new Batch(id: doc.documentID, name: name, subjects: subjects));
     });

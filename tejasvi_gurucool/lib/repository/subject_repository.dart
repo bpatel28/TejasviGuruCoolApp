@@ -30,8 +30,8 @@ class SubjectRepository {
   }
 
   Future<Subject> _extractSubject(DocumentSnapshot subjectDoc) async {
-    final String subjectName = subjectDoc.data["name"];
-    final String subjectDescription = subjectDoc.data["description"];
+    final String subjectName = subjectDoc.data["name"] ?? "";
+    final String subjectDescription = subjectDoc.data["description"] ?? "";
     final List<Map<dynamic, dynamic>> modulesData =
         new List<Map<dynamic, dynamic>>.from(subjectDoc.data["modules"]);
     final List<ModuleItem> studyModules = <ModuleItem>[];
@@ -50,11 +50,11 @@ class SubjectRepository {
 
   Future<ModuleItem> _extractModule(
       int id, Map<String, dynamic> moduleData) async {
-    final moduleName = moduleData["name"];
-    final moduleDescription = moduleData["description"];
-    final fileName = moduleData["fileName"];
-    final filePath = moduleData["filePath"];
-    final fileType = moduleData["fileType"];
+    final moduleName = moduleData["name"] ?? "";
+    final moduleDescription = moduleData["description"] ?? "";
+    final fileName = moduleData["fileName"] ?? "";
+    final filePath = moduleData["filePath"] ?? "";
+    final fileType = moduleData["fileType"] ?? "";
     return new ModuleItem(
       id: id,
       name: moduleName,

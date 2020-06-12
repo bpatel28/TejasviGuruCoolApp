@@ -24,20 +24,35 @@ class UserRepository {
       final DocumentSnapshot doc =
           await _firestore.collection("users").document(firebaseUser.uid).get();
 
-      final String firstName = doc.data['firstName'];
-      final String lastName = doc.data['lastName'];
-      final String middleName = doc.data['middleName'];
-      final String userEmail = firebaseUser.email;
-      final String phoneNo = doc.data['phoneNo'];
-      final bool isMember = doc.data['isMember'];
-      final bool isAdmin = doc.data['isAdmin'];
-      final List<String> batches = new List<String>.from(doc.data['batches']);
-      final Timestamp birthDate = doc.data['birthDate'];
-      final Timestamp createdOn = doc.data['createdOn'];
-      final Timestamp updatedOn = doc.data['updatedOn'];
+      final user = _extractUser(doc);
+      if (user == null) throw new Exception("Invalid User");
+      return user;
+    } on Exception catch (e) {
+      print(e);
+      throw new Exception("Login Failed");
+    }
+  }
+
+  User _extractUser(DocumentSnapshot userDoc) {
+    try {
+      final String firstName = userDoc.data['firstName'] ?? "";
+      final String lastName = userDoc.data['lastName'] ?? "";
+      final String middleName = userDoc.data['middleName'] ?? "";
+      final String userEmail = userDoc.data['email'] ?? "";
+      final String phoneNo = userDoc.data['phoneNo'] ?? "";
+      final bool isMember = userDoc.data['isMember'] ?? false;
+      final bool isAdmin = userDoc.data['isAdmin'] ?? false;
+      final List<String> batches =
+          new List<String>.from(userDoc.data['batches']) ?? <String>[];
+      final Timestamp birthDate =
+          userDoc.data['birthDate'] ?? new DateTime.now();
+      final Timestamp createdOn =
+          userDoc.data['createdOn'] ?? new DateTime.now();
+      final Timestamp updatedOn =
+          userDoc.data['updatedOn'] ?? new DateTime.now();
 
       return new User(
-        id: firebaseUser.uid,
+        id: userDoc.documentID,
         firstName: firstName,
         lastName: lastName,
         middleName: middleName,
@@ -52,7 +67,7 @@ class UserRepository {
       );
     } on Exception catch (e) {
       print(e);
-      throw new Exception("Login Failed");
+      return null;
     }
   }
 
@@ -76,7 +91,7 @@ class UserRepository {
         'middleName': middleName,
         'phoneNo': phoneNo.toString(),
         'isMember': false,
-        'isAdmin' : false,
+        'isAdmin': false,
         'batches': batches,
         'birthDate': birthDate,
         'createdOn': new DateTime.now(),
@@ -99,5 +114,31 @@ class UserRepository {
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
     return currentUser != null;
+  }
+
+  Future<List<User>> getAllUsers() async {
+    final List<User> users = <User>[];
+    try {
+      final result = await _firestore.collection("users").getDocuments();
+      final usersDocs = result.documents;
+      for (int i = 0; i < usersDocs.length; ++i) {
+        final user = _extractUser(usersDocs[i]);
+        if (user != null) users.add(user);
+      }
+    } on Exception catch (e) {
+      print(e);
+    }
+    return users;
+  }
+
+  Future<void> changeMemberStatus(final String userId, final bool value) async {
+    try {
+      await _firestore
+          .collection("users")
+          .document(userId)
+          .updateData({"isMember": value});
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

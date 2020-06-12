@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/students/students_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
@@ -16,23 +17,31 @@ import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final _userRepository = UserRepository();
+  final _batchRepository = BatchRepository();
+  final _subjectRepository = SubjectRepository();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserBloc>(
-          create: (BuildContext context) => UserBloc(UserRepository()),
+          create: (BuildContext context) => UserBloc(_userRepository),
         ),
         BlocProvider<BatchBloc>(
-          create: (BuildContext context) => BatchBloc(BatchRepository()),
+          create: (BuildContext context) => BatchBloc(_batchRepository),
         ),
         BlocProvider<SubjectBloc>(
-          create: (BuildContext context) => SubjectBloc(SubjectRepository()),
+          create: (BuildContext context) => SubjectBloc(_subjectRepository),
+        ), 
+        BlocProvider<StudentsBloc>(
+          create: (BuildContext context) => StudentsBloc(_userRepository),
         )
       ],
       child: MaterialApp(
