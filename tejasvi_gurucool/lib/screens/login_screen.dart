@@ -38,7 +38,7 @@ class LoginScreen extends StatelessWidget {
               height: 50,
             ),
             Icon(
-              Icons.people,
+              Icons.person,
               size: 200,
             ),
             Padding(

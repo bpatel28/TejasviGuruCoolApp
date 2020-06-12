@@ -20,7 +20,7 @@ class RegisterScreen extends StatelessWidget {
             height: 25,
           ),
           Icon(
-            Icons.people,
+            Icons.person,
             size: 200,
           ),
           Padding(

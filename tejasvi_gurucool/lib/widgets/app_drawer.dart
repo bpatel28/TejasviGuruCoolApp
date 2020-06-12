@@ -172,7 +172,7 @@ class AppDrawer extends StatelessWidget {
           ),
           _createDrawerItem(
             context,
-            icon: Icons.people,
+            icon: Icons.person,
             text: "My Profile",
             onTap: () => _changeRoute(context, Routes.MY_PROFILE),
             selected: _selectedRoute == Routes.MY_PROFILE,
