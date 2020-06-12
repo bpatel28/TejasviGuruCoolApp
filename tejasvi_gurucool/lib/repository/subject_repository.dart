@@ -41,10 +41,11 @@ class SubjectRepository {
       if (studyModule != null) studyModules.add(studyModule);
     }
     return new Subject(
-        id: subjectDoc.documentID,
-        name: subjectName,
-        description: subjectDescription,
-        modules: studyModules);
+      id: subjectDoc.documentID,
+      name: subjectName,
+      description: subjectDescription,
+      modules: studyModules,
+    );
   }
 
   Future<ModuleItem> _extractModule(

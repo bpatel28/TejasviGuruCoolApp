@@ -30,6 +30,7 @@ class UserRepository {
       final String userEmail = firebaseUser.email;
       final String phoneNo = doc.data['phoneNo'];
       final bool isMember = doc.data['isMember'];
+      final bool isAdmin = doc.data['isAdmin'];
       final List<String> batches = new List<String>.from(doc.data['batches']);
       final Timestamp birthDate = doc.data['birthDate'];
       final Timestamp createdOn = doc.data['createdOn'];
@@ -44,6 +45,7 @@ class UserRepository {
         birthDate: birthDate.toDate(),
         phoneNo: phoneNo,
         isMember: isMember,
+        isAdmin: isAdmin,
         batches: batches,
         createdOn: createdOn.toDate(),
         updatedOn: updatedOn.toDate(),
@@ -74,6 +76,7 @@ class UserRepository {
         'middleName': middleName,
         'phoneNo': phoneNo.toString(),
         'isMember': false,
+        'isAdmin' : false,
         'batches': batches,
         'birthDate': birthDate,
         'createdOn': new DateTime.now(),

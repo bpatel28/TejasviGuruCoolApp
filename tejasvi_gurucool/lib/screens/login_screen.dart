@@ -203,10 +203,27 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _buildLoginComplete(BuildContext context, User user) {
-    Future.delayed(
-        Duration.zero, () => Navigator.pushNamed(context, Routes.SUBJECTS));
-    return Center(
-      child: Text("Login Successful"),
+    if (user.isAdmin || user.isMember) {
+      Future.delayed(
+          Duration.zero, () => Navigator.pushNamed(context, Routes.SUBJECTS));
+    }
+    return Column(
+      children: [
+        Text(
+          "Login Successful.",
+          style: TextStyle(fontSize: 18.0),
+        ),
+        SizedBox(height: 10.0,),
+        Text(
+          "Please wait until you are registered by Tejasvi GuruCool.",
+          style: TextStyle(fontSize: 15.0),
+        ),
+        SizedBox(height: 7.0,),
+        Text(
+          "Call or Text at +91 9427656100 to register yourself.",
+          style: TextStyle(fontSize: 15.0),
+        ),
+      ],
     );
   }
 }

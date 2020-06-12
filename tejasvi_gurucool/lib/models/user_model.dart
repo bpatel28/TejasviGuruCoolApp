@@ -20,6 +20,9 @@ class User {
   bool _isMember;
   bool get isMember => _isMember;
 
+  bool _isAdmin;
+  bool get isAdmin => _isAdmin;
+
   String _email;
   String get email => _email;
 
@@ -76,21 +79,22 @@ class User {
     }
   }
 
-  User(
-      {String id,
-      String firstName,
-      String lastName,
-      String middleName,
-      DateTime birthDate,
-      String phoneNo,
-      String email,
-      String password,
-      DateTime createdOn,
-      DateTime updatedOn,
-      bool isMember,
-      String token,
-      List<String> batches})
-      : _id = id,
+  User({
+    String id,
+    String firstName,
+    String lastName,
+    String middleName,
+    DateTime birthDate,
+    String phoneNo,
+    String email,
+    String password,
+    DateTime createdOn,
+    DateTime updatedOn,
+    bool isMember,
+    bool isAdmin,
+    String token,
+    List<String> batches,
+  })  : _id = id,
         _firstName = firstName,
         _lastName = lastName,
         _middleName = middleName,
@@ -101,6 +105,7 @@ class User {
         _createdOn = createdOn,
         _updatedOn = updatedOn,
         _isMember = isMember,
+        _isAdmin = isAdmin,
         _token = token {
     _batches = batches ?? <String>[];
   }
