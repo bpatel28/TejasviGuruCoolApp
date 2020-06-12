@@ -39,13 +39,17 @@ class AppDrawer extends StatelessWidget {
             color: Colors.white, fontSize: 22.0, fontWeight: FontWeight.w500),
       ),
     );
-    final userBatches = filterUserBatches(user, batches);
-    for (int i = 0; i < userBatches.length; ++i) {
-      headerWidgets.add(Text(
-        userBatches[i].name,
-        style: TextStyle(color: Colors.white),
-      ));
+    
+    if (!user.isAdmin) {
+      final userBatches = filterUserBatches(user, batches);
+      for (int i = 0; i < userBatches.length; ++i) {
+        headerWidgets.add(Text(
+          userBatches[i].name,
+          style: TextStyle(color: Colors.white),
+        ));
+      }
     }
+
     return DrawerHeader(
       margin: EdgeInsets.zero,
       padding: EdgeInsets.only(top: 15.0, left: 10.0),

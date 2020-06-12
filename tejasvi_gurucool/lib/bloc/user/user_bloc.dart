@@ -57,6 +57,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       yield LoggedOut();
 
       await _userRepository.signOut();
+    } else if (event is ResetPassword) {
+      yield ResetPasswordStarted();
+
+      await _userRepository.resetPassword(event.email);
+
+      yield ResetPasswordSent();
     }
   }
 }

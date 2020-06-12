@@ -55,3 +55,12 @@ class RegisterUser extends UserEvent {
         phoneNo,
       ];
 }
+
+class ResetPassword extends UserEvent {
+  final String email;
+
+  ResetPassword(this.email);
+
+  @override
+  List<Object> get props => [email];
+}

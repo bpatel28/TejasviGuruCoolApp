@@ -32,9 +32,13 @@ class SubjectsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(subject.name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      subject.name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     CircularBox(
                       subject.modules.length.toString(),
                       padding: EdgeInsets.all(10.0),
@@ -60,9 +64,7 @@ class SubjectsScreen extends StatelessWidget {
               if (state is AuthenticatedUser) {
                 return IconButton(
                   icon: Icon(Icons.add_circle),
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                 );
               } else {
                 return SizedBox.shrink();

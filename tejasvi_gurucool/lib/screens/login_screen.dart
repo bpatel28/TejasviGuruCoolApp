@@ -102,9 +102,23 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  void _onSignUpButtonPressed(context) {
+  void _onSignUpButtonPressed(BuildContext context) {
     Future.delayed(Duration.zero, () {
       Navigator.pushNamed(context, Routes.REGISTER);
+    });
+  }
+
+  void _onResetPasswordClicked(BuildContext context, UserBloc bloc) {
+    final email = _emailController.text.trim();
+    if (email == null || email == "" || !email.contains(".com") || !email.contains("@")) {
+      showSnackBar(context, "Please enter valid email.");
+      return;
+    }
+    bloc.add(ResetPassword(email));
+    showSnackBar(context, "Sending Reset Password link");
+    Future.delayed(Duration(seconds: 2), () {
+      showSnackBar(
+        context, "Reset Password email sent. Please check your email.");
     });
   }
 
@@ -164,6 +178,22 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(
             height: 10,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(
+                    "Forgot password? reset now.",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                splashColor: Theme.of(context).accentColor,
+                onTap: () => _onResetPasswordClicked(context, context.bloc<UserBloc>()),
+              )
+            ],
+          ),
           RaisedButton(
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
@@ -213,12 +243,16 @@ class _LoginFormState extends State<LoginForm> {
           "Login Successful.",
           style: TextStyle(fontSize: 18.0),
         ),
-        SizedBox(height: 10.0,),
+        SizedBox(
+          height: 10.0,
+        ),
         Text(
           "Please wait until you are registered by Tejasvi GuruCool.",
           style: TextStyle(fontSize: 15.0),
         ),
-        SizedBox(height: 7.0,),
+        SizedBox(
+          height: 7.0,
+        ),
         Text(
           "Call or Text at +91 9427656100 to register yourself.",
           style: TextStyle(fontSize: 15.0),

@@ -45,3 +45,13 @@ class AuthenticatedUser extends UserState {
   @override
   List<Object> get props => [user];
 }
+
+class ResetPasswordStarted extends UserState {
+  @override
+  List<Object> get props => [];
+}
+
+class ResetPasswordSent extends UserState {
+  @override
+  List<Object> get props => [];
+}

@@ -107,9 +107,13 @@ class UserRepository {
   }
 
   Future<void> signOut() async {
-    return Future.wait([
+    await Future.wait([
       _firebaseAuth.signOut(),
     ]);
+  }
+
+  Future<void> resetPassword(final String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
   Future<bool> isSignedIn() async {
