@@ -42,9 +42,13 @@ class StudentSceen extends StatelessWidget {
                     color: user.isMember ? Colors.green : Colors.red,
                     textColor: Colors.white,
                     splashColor: Theme.of(context).accentColor,
-                    child: Text(user.isMember ? 'Member' : 'Free User'),
+                    child: Text(user.isAdmin ? "Admin" : user.isMember ? "Member" : "Free User"),
                     onPressed: () {
-                      context.bloc<StudentsBloc>().add(ChangeMemberStatus(user.id, !user.isMember));
+                      if (!user.isAdmin) {
+                        context
+                            .bloc<StudentsBloc>()
+                            .add(ChangeMemberStatus(user.id, !user.isMember));
+                      }
                     },
                   )
                 ],

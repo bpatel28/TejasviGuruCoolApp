@@ -54,6 +54,22 @@ class SubjectsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Subjects"),
+        actions: [
+          BlocBuilder<UserBloc, UserState>(
+            builder: (BuildContext context, UserState state) {
+              if (state is AuthenticatedUser) {
+                return IconButton(
+                  icon: Icon(Icons.add_circle),
+                  onPressed: () {
+                    
+                  },
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
+        ],
       ),
       body: Center(
         child: BlocBuilder<UserBloc, UserState>(
@@ -84,8 +100,10 @@ class SubjectsScreen extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          Future.delayed(Duration.zero,
-              () => context.bloc<SubjectBloc>().add(FetchSubjects(user.batches)));
+          Future.delayed(
+              Duration.zero,
+              () =>
+                  context.bloc<SubjectBloc>().add(FetchSubjects(user.batches)));
           return Container();
         }
       },

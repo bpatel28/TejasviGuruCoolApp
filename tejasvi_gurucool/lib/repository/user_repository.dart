@@ -94,6 +94,7 @@ class UserRepository {
         'isAdmin': false,
         'batches': batches,
         'birthDate': birthDate,
+        'email' : email,
         'createdOn': new DateTime.now(),
         'updatedOn': new DateTime.now(),
       });

@@ -157,6 +157,7 @@ class MyProfileScreen extends StatelessWidget {
             fontSize: 25.0,
           ),
           createUserInfoText(user.getFullName(), ""),
+          createUserInfoText("Member: ", user.isAdmin ? "Admin" : user.isMember ? "Member" : "Free User"),
           getUserBatchesWidget(user, batches),
           createUserInfoText("Birth Date: ", formatDate(user.birthDate)),
           createUserInfoText(
