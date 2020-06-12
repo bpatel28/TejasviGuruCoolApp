@@ -47,36 +47,39 @@ class AppDrawer extends StatelessWidget {
       ));
     }
     return DrawerHeader(
-        margin: EdgeInsets.zero,
-        padding: EdgeInsets.only(top: 15.0, left: 10.0),
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            CircularBox(
-              user.getInitials(),
-              padding: EdgeInsets.all(12.0),
-              color: Colors.red,
-              textColor: Colors.white,
-              fontSize: 15.0,
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.only(top: 15.0, left: 10.0),
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          CircularBox(
+            user.getInitials(),
+            padding: EdgeInsets.all(12.0),
+            color: Colors.red,
+            textColor: Colors.white,
+            fontSize: 15.0,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: headerWidgets,
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: headerWidgets,
-              ),
-            )
-          ],
-        ));
+          )
+        ],
+      ),
+    );
   }
 
-  Widget _createDrawerItem(BuildContext context,
-      {IconData icon,
-      String text,
-      GestureTapCallback onTap,
-      bool selected: false}) {
+  Widget _createDrawerItem(
+    BuildContext context, {
+    IconData icon,
+    String text,
+    GestureTapCallback onTap,
+    bool selected: false,
+  }) {
     return ListTile(
       title: Row(
         children: <Widget>[
@@ -141,21 +144,46 @@ class AppDrawer extends StatelessWidget {
               }
             },
           ),
-          _createDrawerItem(context,
-              icon: Icons.subject,
-              text: "Subjects",
-              onTap: () => _changeRoute(context, Routes.SUBJECTS),
-              selected: _selectedRoute == Routes.SUBJECTS),
-          _createDrawerItem(context,
-              icon: Icons.people,
-              text: "My Profile",
-              onTap: () => _changeRoute(context, Routes.MY_PROFILE),
-              selected: _selectedRoute == Routes.MY_PROFILE),
-          _createDrawerItem(context,
-              icon: Icons.info,
-              text: "About Us",
-              onTap: () => _changeRoute(context, Routes.ABOUT_US),
-              selected: _selectedRoute == Routes.ABOUT_US)
+          _createDrawerItem(
+            context,
+            icon: Icons.subject,
+            text: "Subjects",
+            onTap: () => _changeRoute(context, Routes.SUBJECTS),
+            selected: _selectedRoute == Routes.SUBJECTS,
+          ),
+          BlocBuilder<UserBloc, UserState>(
+            builder: (BuildContext context, UserState state) {
+              if (state is AuthenticatedUser) {
+                if (state.user.isAdmin) {
+                  return _createDrawerItem(
+                    context,
+                    icon: Icons.people,
+                    text: "Students",
+                    onTap: () => _changeRoute(context, Routes.STUDENTS),
+                    selected: _selectedRoute == Routes.STUDENTS,
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
+          _createDrawerItem(
+            context,
+            icon: Icons.people,
+            text: "My Profile",
+            onTap: () => _changeRoute(context, Routes.MY_PROFILE),
+            selected: _selectedRoute == Routes.MY_PROFILE,
+          ),
+          _createDrawerItem(
+            context,
+            icon: Icons.info,
+            text: "About Us",
+            onTap: () => _changeRoute(context, Routes.ABOUT_US),
+            selected: _selectedRoute == Routes.ABOUT_US,
+          )
         ],
       ),
     );

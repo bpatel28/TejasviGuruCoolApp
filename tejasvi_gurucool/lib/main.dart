@@ -10,6 +10,7 @@ import 'package:tejasvi_gurucool/repository/user_repository.dart';
 import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
+import 'package:tejasvi_gurucool/screens/student_screen.dart';
 import 'package:tejasvi_gurucool/screens/subjects_screen.dart';
 import 'package:tejasvi_gurucool/screens/login_screen.dart';
 import 'package:tejasvi_gurucool/screens/register_screen.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           Routes.LOGIN: (context) => LoginScreen(),
           Routes.REGISTER: (context) => RegisterScreen(),
           Routes.MODULE_ITEMS: (context) => ModuleItemsScreen(),
+          Routes.STUDENTS: (context) => StudentSceen(),
           Routes.MY_PROFILE: (context) => MyProfileScreen(),
           Routes.ABOUT_US: (context) => AboutUsScreen(),
         },
