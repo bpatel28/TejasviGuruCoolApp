@@ -9,6 +9,8 @@ import 'package:tejasvi_gurucool/repository/batch_repository.dart';
 import 'package:tejasvi_gurucool/repository/subject_repository.dart';
 import 'package:tejasvi_gurucool/repository/user_repository.dart';
 import 'package:tejasvi_gurucool/screens/about_us_screen.dart';
+import 'package:tejasvi_gurucool/screens/add_module.dart';
+import 'package:tejasvi_gurucool/screens/add_subject_screen.dart';
 import 'package:tejasvi_gurucool/screens/module_items_screen.dart';
 import 'package:tejasvi_gurucool/screens/my_profile_screen.dart';
 import 'package:tejasvi_gurucool/screens/student_screen.dart';
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<SubjectBloc>(
           create: (BuildContext context) => SubjectBloc(_subjectRepository),
-        ), 
+        ),
         BlocProvider<StudentsBloc>(
           create: (BuildContext context) => StudentsBloc(_userRepository),
         )
@@ -61,6 +63,8 @@ class MyApp extends StatelessWidget {
           Routes.STUDENTS: (context) => StudentSceen(),
           Routes.MY_PROFILE: (context) => MyProfileScreen(),
           Routes.ABOUT_US: (context) => AboutUsScreen(),
+          Routes.ADD_SUBJECT: (context) => AddSubjectScreen(),
+          Routes.ADD_MODULE: (context) => AddModuleScreen(),
         },
         home: SubjectsScreen(),
       ),

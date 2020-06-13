@@ -5,7 +5,7 @@ import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/helpers/route_helper.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
-import 'package:tejasvi_gurucool/widgets/app_drawer.dart';
+import 'package:tejasvi_gurucool/screens/add_module.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ModuleItemsScreenArgs {
@@ -58,8 +58,9 @@ class ModuleItemsScreen extends StatelessWidget {
     for (int i = 0; i < subject.modules.length; ++i) {
       final ModuleItem item = subject.modules[i];
       if (item != null) {
-        items.add(Card(
-          child: InkWell(
+        items.add(
+          Card(
+            child: InkWell(
               onTap: () => onTapModuleItem(context, item),
               splashColor: Theme.of(context).accentColor,
               child: Padding(
@@ -75,16 +76,22 @@ class ModuleItemsScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           item.name,
-                          style: TextStyle(fontSize: 15.0),
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
                         ),
-                        Text(item.description,
-                            style: TextStyle(fontSize: 10.0)),
+                        Text(
+                          item.description,
+                          style: TextStyle(fontSize: 10.0),
+                        ),
                       ],
                     )
                   ],
                 ),
-              )),
-        ));
+              ),
+            ),
+          ),
+        );
       }
     }
 
@@ -101,11 +108,17 @@ class ModuleItemsScreen extends StatelessWidget {
         actions: [
           BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState state) {
-              if (state is AuthenticatedUser) {
+              if (state is AuthenticatedUser && state.user.isAdmin) {
                 return IconButton(
                   icon: Icon(Icons.add_circle),
                   onPressed: () {
-                    
+                    Future.delayed(Duration.zero, () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.ADD_MODULE,
+                        arguments: AddModuleScreenArgs(args.subject),
+                      );
+                    });
                   },
                 );
               } else {
@@ -121,7 +134,6 @@ class ModuleItemsScreen extends StatelessWidget {
           children: getItems(context, args.subject),
         ),
       ),
-      drawer: AppDrawer(Routes.SUBJECTS),
     );
   }
 }

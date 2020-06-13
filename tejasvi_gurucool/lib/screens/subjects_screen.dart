@@ -25,30 +25,31 @@ class SubjectsScreen extends StatelessWidget {
         splashColor: Theme.of(context).accentColor,
         onTap: () => onSubjectCardTap(context, subject),
         child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      subject.name,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    subject.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                    CircularBox(
-                      subject.modules.length.toString(),
-                      padding: EdgeInsets.all(10.0),
-                      color: const Color(0xFFffa500),
-                    ),
-                  ],
-                ),
-                Text(subject.description),
-              ],
-            )),
+                  ),
+                  CircularBox(
+                    subject.modules.length.toString(),
+                    padding: EdgeInsets.all(10.0),
+                    color: const Color(0xFFffa500),
+                  ),
+                ],
+              ),
+              Text(subject.description),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -61,10 +62,14 @@ class SubjectsScreen extends StatelessWidget {
         actions: [
           BlocBuilder<UserBloc, UserState>(
             builder: (BuildContext context, UserState state) {
-              if (state is AuthenticatedUser) {
+              if (state is AuthenticatedUser && state.user.isAdmin) {
                 return IconButton(
                   icon: Icon(Icons.add_circle),
-                  onPressed: () {},
+                  onPressed: () {
+                    Future.delayed(Duration.zero, () {
+                      Navigator.pushNamed(context, Routes.ADD_SUBJECT);
+                    });
+                  },
                 );
               } else {
                 return SizedBox.shrink();

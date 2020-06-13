@@ -168,7 +168,7 @@ class _RegisterFormState extends State<RegisterForm> {
     return DropdownButton(
       icon: Icon(Icons.arrow_downward),
       value: batch?.id,
-      hint: Text("Selct Batch"),
+      hint: Text("Select Batch"),
       iconSize: 24,
       elevation: 16,
       isExpanded: true,

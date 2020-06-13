@@ -6,4 +6,6 @@ class Routes {
   static const STUDENTS = "/students";
   static const MY_PROFILE = "/my_profile";
   static const ABOUT_US = "/about_us";
+  static const ADD_SUBJECT = "/add_subject";
+  static const ADD_MODULE = "/add_module";
 }
