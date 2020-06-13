@@ -53,7 +53,7 @@ class _AddSubjectState extends State<AddSubjectScreen> {
     _subjectBloc = context.bloc<SubjectBloc>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add New Subject"),
+        title: Text("New Subject"),
       ),
       body: Column(
         children: [
@@ -75,6 +75,14 @@ class _AddSubjectState extends State<AddSubjectScreen> {
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: [
+                Text(
+                  _batch == null ? "Add new subject" : "Add new subject for ${_batch?.name}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                    color: Colors.red
+                  ),
+                ),
                 _buildBatchDropdown(
                   "Select Batch:",
                   batchState.batches,

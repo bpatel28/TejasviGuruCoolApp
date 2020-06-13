@@ -65,7 +65,7 @@ class _AddModuleState extends State<AddModuleScreen> {
     _subjectBloc = context.bloc<SubjectBloc>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("${_subject?.name}: Add New Module"),
+        title: Text("New Module"),
       ),
       body: Column(
         children: [
@@ -87,6 +87,20 @@ class _AddModuleState extends State<AddModuleScreen> {
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: [
+                Text(
+                  "Add new module for ${_subject.name}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                    color: Colors.red
+                  ),
+                ),
+                Text(
+                  _subject.description,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
                 _buildTextInput(
                   "Name",
                   _moduleNameController,
@@ -105,7 +119,8 @@ class _AddModuleState extends State<AddModuleScreen> {
                 SizedBox(
                   height: 10.0,
                 ),
-                _buildTextInput("URL", _moduleItemUrlController, _validateModuleItemUrl, (value) { }),
+                _buildTextInput("URL", _moduleItemUrlController,
+                    _validateModuleItemUrl, (value) {}),
                 SizedBox(
                   height: 10.0,
                 ),
