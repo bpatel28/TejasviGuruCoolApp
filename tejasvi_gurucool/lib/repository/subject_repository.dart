@@ -73,4 +73,20 @@ class SubjectRepository {
     });
     return subjectDoc.documentID;
   }
+
+  Future<void> addNewModuleItem(String subjectId, ModuleItem moduleItem) async {
+    await _firestore.collection("subjects").document(subjectId).updateData({
+      "modules" : FieldValue.arrayUnion(
+        <dynamic>[
+          {
+            "description" : moduleItem.description,
+            "fileName" : moduleItem.fileName,
+            "filePath" : moduleItem.filePath,
+            "fileType" : moduleItem.fileType,
+            "name" : moduleItem.fileName,
+          }
+        ]
+      )
+    });
+  }
 }

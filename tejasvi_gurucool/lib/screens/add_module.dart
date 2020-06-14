@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
+import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 
 typedef void _OnChange(String value);
@@ -60,10 +64,37 @@ class _AddModuleState extends State<AddModuleScreen> {
         appBar: AppBar(
           title: Text("New Module"),
         ),
-        body: Column(
+        body: ListView(
           children: [
             _getModuleCard(context),
-            _buildModuleAddForm(context),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (BuildContext userblocContext, UserState userState) {
+                if (userState is AuthenticatedUser) {
+                  return BlocBuilder<SubjectBloc, SubjectState>(
+                    builder: (BuildContext subjectblocContext,
+                        SubjectState subjectState) {
+                      if (subjectState is LoadingAddNewModuleItem) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (subjectState is NewModuleItemAdded) {
+                        Future.delayed(Duration.zero, () {
+                          Navigator.pop(context);
+                          context
+                              .bloc<SubjectBloc>()
+                              .add(FetchSubjects(userState.user.batches));
+                        });
+                        return Text("New Subject Added");
+                      } else {
+                        return _buildModuleAddForm(context);
+                      }
+                    },
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -185,6 +216,19 @@ class _AddModuleState extends State<AddModuleScreen> {
               textColor: Colors.white,
               splashColor: Theme.of(context).primaryColor,
               onPressed: () {
+                final String name = _moduleNameController.text;
+                final String description = _moduleDescriptionController.text;
+                final String url = _moduleItemUrlController.text;
+                final ModuleItem item = new ModuleItem(
+                  name: name,
+                  description: description,
+                  filePath: url,
+                  fileName: name,
+                  fileType: "VIDEO",
+                );
+                context
+                    .bloc<SubjectBloc>()
+                    .add(AddNewModuleItem(_subject.id, item));
                 Navigator.of(context).pop();
               },
             ),

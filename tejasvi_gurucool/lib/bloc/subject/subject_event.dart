@@ -12,3 +12,13 @@ class FetchSubjects extends SubjectEvent {
    @override
   List<Object> get props => [batches];
 }
+
+class AddNewModuleItem extends SubjectEvent {
+  final String subjectId;
+  final ModuleItem moduleItem;
+
+  AddNewModuleItem(this.subjectId, this.moduleItem);
+
+  @override
+  List<Object> get props => [moduleItem];
+}

@@ -50,7 +50,7 @@ class _AddSubjectState extends State<AddSubjectScreen> {
         title: Text("New Subject"),
       ),
       body: Builder(
-        builder: (context) => Column(
+        builder: (context) => ListView(
           children: [
             _getSubjectCard(context),
             BlocBuilder<UserBloc, UserState>(
