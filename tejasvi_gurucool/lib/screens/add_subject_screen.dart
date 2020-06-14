@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
@@ -15,10 +13,6 @@ class AddSubjectScreen extends StatefulWidget {
 }
 
 class _AddSubjectState extends State<AddSubjectScreen> {
-  UserBloc _userBloc;
-  BatchBloc _batchBloc;
-  SubjectBloc _subjectBloc;
-
   Batch _batch;
   String _name;
   String _description;
@@ -48,84 +42,93 @@ class _AddSubjectState extends State<AddSubjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _userBloc = context.bloc<UserBloc>();
-    _batchBloc = context.bloc<BatchBloc>();
-    _subjectBloc = context.bloc<SubjectBloc>();
     return Scaffold(
       appBar: AppBar(
         title: Text("New Subject"),
       ),
-      body: Column(
-        children: [
-          _getSubjectCard(),
-          _buildSubjectAddForm(),
-        ],
+      body: Builder(
+        builder: (context) => Column(
+          children: [
+            _getSubjectCard(context),
+            BlocBuilder<BatchBloc, BatchState>(
+              builder: (BuildContext batchblocContext, BatchState batchState) {
+                if (batchState is BatchInitial) {
+                  Future.delayed(Duration.zero, () {
+                    context.bloc<BatchBloc>().add(FetchBatches());
+                  });
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (batchState is AllBatchLoaded) {
+                  return _buildSubjectAddForm(context, batchState.batches);
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSubjectAddForm() {
-    final BatchState batchState = _batchBloc?.state;
-    final UserState userState = _userBloc?.state;
-    if (userState is AuthenticatedUser && batchState is AllBatchLoaded) {
-      return Form(
-        key: _formKey,
-        child: Card(
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Text(
-                  _batch == null ? "Add new subject" : "Add new subject for ${_batch?.name}",
-                  style: TextStyle(
+  Widget _buildSubjectAddForm(BuildContext context, List<Batch> batches) {
+    return Form(
+      key: _formKey,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Text(
+                _batch == null
+                    ? "Add new subject"
+                    : "Add new subject for ${_batch?.name}",
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
-                    color: Colors.red
-                  ),
-                ),
-                _buildBatchDropdown(
-                  "Select Batch:",
-                  batchState.batches,
-                ),
-                _buildTextInput(
-                  "Name",
-                  _subjectNameController,
-                  _validateSubjectName,
-                  _onSubjectNameChange,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                _buildTextInput(
-                  "Description",
-                  _subjectDescriptionController,
-                  (value) => null,
-                  _onSubjectDescriptionChange,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  textColor: Colors.white,
-                  splashColor: Theme.of(context).accentColor,
-                  child: Text("Submit"),
-                  onPressed: () => _onSubjectAddSubmit(context),
-                ),
-              ],
-            ),
+                    color: Colors.red),
+              ),
+              _buildBatchDropdown(
+                "Select Batch:",
+                batches,
+              ),
+              _buildTextInput(
+                "Name",
+                _subjectNameController,
+                _validateSubjectName,
+                _onSubjectNameChange,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              _buildTextInput(
+                "Description",
+                _subjectDescriptionController,
+                (value) => null,
+                _onSubjectDescriptionChange,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              RaisedButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                splashColor: Theme.of(context).accentColor,
+                child: Text("Submit"),
+                onPressed: () => _onSubjectAddSubmit(context),
+              ),
+            ],
           ),
         ),
-      );
-    } else {
-      return SizedBox.shrink();
-    }
+      ),
+    );
   }
 
-  Widget _getSubjectCard() {
+  Widget _getSubjectCard(BuildContext context) {
     final String name = _name ?? "Name";
     final String description =
-        (_batch?.name ?? "") + " "+ (_description ?? "Description");
+        (_batch?.name ?? "") + " " + (_description ?? "Description");
     return Card(
       child: Padding(
         padding: EdgeInsets.all(10.0),
@@ -156,12 +159,54 @@ class _AddSubjectState extends State<AddSubjectScreen> {
     );
   }
 
-  void _onSubjectAddSubmit(BuildContext context) {}
+  Future<void> _onSubjectAddSubmit(BuildContext context) async {
+    if (!_formKey.currentState.validate()) return;
+    if (_batch == null) {
+      showSnackBar(context, "Please select batch.");
+      return;
+    }
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text('Add New subject for ${_batch?.name}'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to add new subject?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text('Approve'),
+              color: Colors.green,
+              textColor: Colors.white,
+              splashColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              child: Text('Cancel'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              splashColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void showSnackBar(BuildContext context, message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+    final snackBar = SnackBar(content: Text(message));
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildTextInput(
@@ -200,13 +245,5 @@ class _AddSubjectState extends State<AddSubjectScreen> {
         return DropdownMenuItem(value: batch.id, child: Text(batch.name));
       }).toList(),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _userBloc.close();
-    _batchBloc.close();
-    _subjectBloc.close();
   }
 }

@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
-import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 
 typedef void _OnChange(String value);
@@ -19,9 +16,6 @@ class AddModuleScreen extends StatefulWidget {
 }
 
 class _AddModuleState extends State<AddModuleScreen> {
-  UserBloc _userBloc;
-  SubjectBloc _subjectBloc;
-
   Subject _subject;
   String _name;
   String _description;
@@ -61,87 +55,80 @@ class _AddModuleState extends State<AddModuleScreen> {
   Widget build(BuildContext context) {
     final AddModuleScreenArgs args = ModalRoute.of(context).settings.arguments;
     _subject = args.subject;
-    _userBloc = context.bloc<UserBloc>();
-    _subjectBloc = context.bloc<SubjectBloc>();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("New Module"),
-      ),
-      body: Column(
-        children: [
-          _getModuleCard(),
-          _buildModuleAddForm(),
-        ],
+    return Builder(
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: Text("New Module"),
+        ),
+        body: Column(
+          children: [
+            _getModuleCard(context),
+            _buildModuleAddForm(context),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildModuleAddForm() {
-    final SubjectState subjectState = _subjectBloc?.state;
-    final UserState userState = _userBloc?.state;
-    if (userState is AuthenticatedUser && subjectState is SubjectsLoaded) {
-      return Form(
-        key: _formKey,
-        child: Card(
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Text(
-                  "Add new module for ${_subject.name}",
-                  style: TextStyle(
+  Widget _buildModuleAddForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Text(
+                "Add new module for ${_subject.name}",
+                style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
-                    color: Colors.red
-                  ),
+                    color: Colors.red),
+              ),
+              Text(
+                _subject.description,
+                style: TextStyle(
+                  fontSize: 15.0,
                 ),
-                Text(
-                  _subject.description,
-                  style: TextStyle(
-                    fontSize: 15.0,
-                  ),
-                ),
-                _buildTextInput(
-                  "Name",
-                  _moduleNameController,
-                  _validateModuleName,
-                  _onModuleNameChange,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                _buildTextInput(
-                  "Description",
-                  _moduleDescriptionController,
-                  (value) => null,
-                  _onModuleDescriptionChange,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                _buildTextInput("URL", _moduleItemUrlController,
-                    _validateModuleItemUrl, (value) {}),
-                SizedBox(
-                  height: 10.0,
-                ),
-                RaisedButton(
-                  color: Theme.of(context).primaryColor,
-                  textColor: Colors.white,
-                  splashColor: Theme.of(context).accentColor,
-                  child: Text("Submit"),
-                  onPressed: () => _onAddModuleClick(context),
-                ),
-              ],
-            ),
+              ),
+              _buildTextInput(
+                "Name",
+                _moduleNameController,
+                _validateModuleName,
+                _onModuleNameChange,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              _buildTextInput(
+                "Description",
+                _moduleDescriptionController,
+                (value) => null,
+                _onModuleDescriptionChange,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              _buildTextInput("URL", _moduleItemUrlController,
+                  _validateModuleItemUrl, (value) {}),
+              SizedBox(
+                height: 10.0,
+              ),
+              RaisedButton(
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                splashColor: Theme.of(context).accentColor,
+                child: Text("Submit"),
+                onPressed: () => _onAddModuleClick(context),
+              ),
+            ],
           ),
         ),
-      );
-    } else {
-      return SizedBox.shrink();
-    }
+      ),
+    );
   }
 
-  Widget _getModuleCard() {
+  Widget _getModuleCard(BuildContext context) {
     final String name = _name ?? "Name";
     final String description = _description ?? "Description";
     return Card(
@@ -175,12 +162,50 @@ class _AddModuleState extends State<AddModuleScreen> {
     );
   }
 
-  _onAddModuleClick(BuildContext context) {}
+  Future<void> _onAddModuleClick(BuildContext context) async {
+    if (!_formKey.currentState.validate()) return;
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          title: Text('Add New Module for ${_subject?.name}'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to add new module?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text('Approve'),
+              color: Colors.green,
+              textColor: Colors.white,
+              splashColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              child: Text('Cancel'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              splashColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void showSnackBar(BuildContext context, message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+    final snackBar = SnackBar(content: Text(message));
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildTextInput(
@@ -195,12 +220,5 @@ class _AddModuleState extends State<AddModuleScreen> {
       decoration: InputDecoration(labelText: label),
       onChanged: onChange,
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _userBloc.close();
-    _subjectBloc.close();
   }
 }
