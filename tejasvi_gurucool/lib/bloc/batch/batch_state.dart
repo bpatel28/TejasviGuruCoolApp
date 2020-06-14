@@ -22,3 +22,13 @@ class LoadingBatchesList extends BatchState {
   @override
   List<Object> get props => [];
 }
+
+class LoadingSubjectAdd extends BatchState {
+  @override
+  List<Object> get props => [];
+}
+
+class SubjectAdded extends BatchState {
+  @override
+  List<Object> get props => [];
+}

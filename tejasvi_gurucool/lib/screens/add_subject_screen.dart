@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/batch/batch_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/models/batch_model.dart';
+import 'package:tejasvi_gurucool/models/subject_model.dart';
 import 'package:tejasvi_gurucool/widgets/circular_box.dart';
 
 typedef void _OnChange(String value);
@@ -50,22 +53,45 @@ class _AddSubjectState extends State<AddSubjectScreen> {
         builder: (context) => Column(
           children: [
             _getSubjectCard(context),
-            BlocBuilder<BatchBloc, BatchState>(
-              builder: (BuildContext batchblocContext, BatchState batchState) {
-                if (batchState is BatchInitial) {
-                  Future.delayed(Duration.zero, () {
-                    context.bloc<BatchBloc>().add(FetchBatches());
-                  });
-                  return Center(
-                    child: CircularProgressIndicator(),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (BuildContext userblocContext, UserState userState) {
+                if (userState is AuthenticatedUser) {
+                  return BlocBuilder<BatchBloc, BatchState>(
+                    builder:
+                        (BuildContext batchblocContext, BatchState batchState) {
+                      if (batchState is BatchInitial) {
+                        Future.delayed(Duration.zero, () {
+                          context.bloc<BatchBloc>().add(FetchBatches());
+                        });
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (batchState is AllBatchLoaded) {
+                        return _buildSubjectAddForm(
+                            context, batchState.batches);
+                      } else if (batchState is LoadingSubjectAdd) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (batchState is SubjectAdded) {
+                        Future.delayed(Duration.zero, () {
+                          Navigator.pop(context);
+                          context
+                              .bloc<SubjectBloc>()
+                              .add(FetchSubjects(userState.user.batches));
+                          context.bloc<BatchBloc>().add(FetchBatches());
+                        });
+                        return Text("New Subject Added");
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
                   );
-                } else if (batchState is AllBatchLoaded) {
-                  return _buildSubjectAddForm(context, batchState.batches);
                 } else {
                   return SizedBox.shrink();
                 }
               },
-            )
+            ),
           ],
         ),
       ),
@@ -186,7 +212,16 @@ class _AddSubjectState extends State<AddSubjectScreen> {
               textColor: Colors.white,
               splashColor: Theme.of(context).primaryColor,
               onPressed: () {
-                Navigator.of(context).pop();
+                final String name = _subjectNameController.text;
+                final String description =
+                    _batch.name + " " + _subjectDescriptionController.text;
+                final String batchId = _batch.id;
+                final Subject subject =
+                    new Subject(name: name, description: description);
+                context.bloc<BatchBloc>().add(AddSubject(batchId, subject));
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pop();
+                });
               },
             ),
             RaisedButton(

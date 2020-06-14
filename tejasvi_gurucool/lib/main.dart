@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => UserBloc(_userRepository),
         ),
         BlocProvider<BatchBloc>(
-          create: (BuildContext context) => BatchBloc(_batchRepository),
+          create: (BuildContext context) => BatchBloc(_batchRepository, _subjectRepository),
         ),
         BlocProvider<SubjectBloc>(
           create: (BuildContext context) => SubjectBloc(_subjectRepository),

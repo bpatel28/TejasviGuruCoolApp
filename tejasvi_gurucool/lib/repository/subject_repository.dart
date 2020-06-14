@@ -64,4 +64,13 @@ class SubjectRepository {
       fileType: fileType,
     );
   }
+
+  Future<String> addNewSubject(Subject subject) async {
+    final subjectDoc = await _firestore.collection("subjects").add({
+      "name": subject.name,
+      "description": subject.description,
+      "modules": [],
+    });
+    return subjectDoc.documentID;
+  }
 }
