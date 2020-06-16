@@ -7,6 +7,14 @@ import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
 import 'package:tejasvi_gurucool/models/subject_model.dart';
 
+import '../bloc/module/module_bloc.dart';
+import '../bloc/module/module_bloc.dart';
+import '../bloc/module/module_bloc.dart';
+import '../bloc/module/module_bloc.dart';
+import '../repository/subject_repository.dart';
+import '../repository/subject_repository.dart';
+import '../repository/subject_repository.dart';
+
 typedef void _OnChange(String value);
 
 class AddModuleScreenArgs {
@@ -29,6 +37,7 @@ class _AddModuleState extends State<AddModuleScreen> {
   final _moduleNameController = TextEditingController();
   final _moduleDescriptionController = TextEditingController();
   final _moduleItemUrlController = TextEditingController();
+  final _moduleBloc = ModuleBloc(SubjectRepository());
 
   void _onModuleNameChange(String value) {
     setState(() {
@@ -72,6 +81,7 @@ class _AddModuleState extends State<AddModuleScreen> {
               builder: (BuildContext userblocContext, UserState userState) {
                 if (userState is AuthenticatedUser) {
                   return BlocBuilder<ModuleBloc, ModuleState>(
+                    bloc: _moduleBloc,
                     builder: (BuildContext subjectblocContext,
                         ModuleState subjectState) {
                       if (subjectState is LoadingAddNewModuleItem) {
@@ -227,8 +237,7 @@ class _AddModuleState extends State<AddModuleScreen> {
                   fileName: name,
                   fileType: "VIDEO",
                 );
-                context
-                    .bloc<ModuleBloc>()
+                _moduleBloc
                     .add(AddNewModuleItem(_subject.id, item));
                 Navigator.of(context).pop();
               },
@@ -265,5 +274,11 @@ class _AddModuleState extends State<AddModuleScreen> {
       decoration: InputDecoration(labelText: label),
       onChanged: onChange,
     );
+  }
+
+  @override
+  void dispose() {
+    _moduleBloc.close();
+    super.dispose();
   }
 }

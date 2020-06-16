@@ -46,9 +46,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<StudentsBloc>(
           create: (BuildContext context) => StudentsBloc(_userRepository),
         ),
-        BlocProvider<ModuleBloc>(
-          create: (BuildContext context) => ModuleBloc(_subjectRepository),
-        )
       ],
       child: MaterialApp(
         title: 'Tejasvi GuruCool',
