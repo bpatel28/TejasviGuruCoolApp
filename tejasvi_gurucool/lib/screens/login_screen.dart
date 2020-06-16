@@ -233,10 +233,10 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   Widget _buildLoginComplete(BuildContext context, User user) {
-    if (user.isAdmin || user.isMember) {
+    // if (user.isAdmin || user.isMember) {
       Future.delayed(
           Duration.zero, () => Navigator.pushNamed(context, Routes.SUBJECTS));
-    }
+    // }
     return Column(
       children: [
         Text(
