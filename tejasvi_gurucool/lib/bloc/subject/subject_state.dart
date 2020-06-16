@@ -22,13 +22,3 @@ class SubjectsLoaded extends SubjectState {
   @override
   List<Object> get props => [subjects];
 }
-
-class LoadingAddNewModuleItem extends SubjectState {
-  @override
-  List<Object> get props => [];
-}
-
-class NewModuleItemAdded extends SubjectState {
-  @override
-  List<Object> get props => [];
-}

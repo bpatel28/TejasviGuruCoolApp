@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tejasvi_gurucool/bloc/module/module_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/subject/subject_bloc.dart';
 import 'package:tejasvi_gurucool/bloc/user/user_bloc.dart';
 import 'package:tejasvi_gurucool/models/module_item.dart';
@@ -70,9 +71,9 @@ class _AddModuleState extends State<AddModuleScreen> {
             BlocBuilder<UserBloc, UserState>(
               builder: (BuildContext userblocContext, UserState userState) {
                 if (userState is AuthenticatedUser) {
-                  return BlocBuilder<SubjectBloc, SubjectState>(
+                  return BlocBuilder<ModuleBloc, ModuleState>(
                     builder: (BuildContext subjectblocContext,
-                        SubjectState subjectState) {
+                        ModuleState subjectState) {
                       if (subjectState is LoadingAddNewModuleItem) {
                         return Center(
                           child: CircularProgressIndicator(),
@@ -227,7 +228,7 @@ class _AddModuleState extends State<AddModuleScreen> {
                   fileType: "VIDEO",
                 );
                 context
-                    .bloc<SubjectBloc>()
+                    .bloc<ModuleBloc>()
                     .add(AddNewModuleItem(_subject.id, item));
                 Navigator.of(context).pop();
               },
